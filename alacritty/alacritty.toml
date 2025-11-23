@@ -2,18 +2,20 @@
 live_config_reload = true
 working_directory = "~"
 
+[scrolling]
+history = 100000
 [window]
-opacity = 0.4
+opacity = 0.6
 title = "Terminal"
 decorations = "Buttonless"
-dynamic_title = false
+dynamic_title = true
 decorations_theme_variant = "Dark"
 padding = { x = 5, y = 10 }
 blur = true
 
 [font]
 normal = { family = "BlexMono Nerd Font Mono", style = "Regular" }
-size = 12
+size = 10
 
 [colors]
 cursor = { text = "#00ecff", cursor = "#ab3c7e" }
@@ -29,7 +31,7 @@ cyan = "#00ecff"
 white = "#ffffff"
 
 [cursor]
-style = { shape = "Underline", blinking = "Off" }
+style = { shape = "Block", blinking = "Off" }
 
 [mouse]
 hide_when_typing = true
