@@ -1,0 +1,98 @@
+# -------------------------
+# Basic behavior
+# -------------------------
+
+working-directory = home
+macos-option-as-alt = true
+scrollback-limit = 100000
+
+# -------------------------
+# Font
+# -------------------------
+
+font-family = "BlexMono Nerd Font Mono"
+font-size = 10
+
+# -------------------------
+# Window appearance
+# -------------------------
+
+background = #11111b
+foreground = #f8f8f2
+
+background-opacity = 0.7
+background-blur = true
+
+window-padding-x = 5
+window-padding-y = 10
+
+title = "Terminal"
+window-decoration = true
+macos-titlebar-style = hidden
+macos-window-buttons = hidden
+
+# -------------------------
+# Colors (soft dark palette)
+# -------------------------
+
+# normal
+palette = 0=#1e1e2e
+palette = 1=#ff5555
+palette = 2=#50fa7b
+palette = 3=#f1fa8c
+palette = 4=#6272a4
+palette = 5=#ff79c6
+palette = 6=#8be9fd
+palette = 7=#f8f8f2
+
+# bright
+palette = 8=#44475a
+palette = 9=#ff6e6e
+palette = 10=#69ff94
+palette = 11=#ffffa5
+palette = 12=#8be9fd
+palette = 13=#ff92df
+palette = 14=#a4ffff
+palette = 15=#ffffff
+
+
+# -------------------------
+# Cursor
+# -------------------------
+
+# Cursor (Tokyo Night style)
+cursor-style = block
+cursor-style-blink = false
+
+# Tokyo Night-ish colors
+cursor-color = #7aa2f7
+cursor-text  = #1a1b26
+
+# -------------------------
+# Mouse
+# -------------------------
+
+# No "hide when typing" anymore
+# mouse-hide-while-typing = false
+
+# Make unfocused splits fully opaque (no dark fade)
+unfocused-split-opacity = 1.0
+
+# Border color for splits
+split-divider-color = #00ecff
+
+# Optional: make active split stand out via outline
+# active-split-border = #00ecff
+# active-split-border-thickness = 2
+
+# Optional: disable default dimming so unfocused look like normal
+# dim-unfocused-split = false
+
+# --- Split control keybindings ---
+keybind = cmd+w=close_surface
+keybind = cmd+shift+w=close_window
+confirm-close-surface = false
+
+
+
+
