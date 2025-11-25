@@ -31,6 +31,16 @@
         "id": "c191da7b-57e1-4641-a462-de6a200b5d08",
         "type": "session-cost",
         "backgroundColor": "bgRed"
+      },
+      {
+        "id": "f3f16435-ddc2-4aad-8344-4771bb677f12",
+        "type": "session-clock",
+        "backgroundColor": "bgCyan"
+      },
+      {
+        "id": "31dd066f-3dab-4ee4-adf4-8c21e70442f8",
+        "type": "git-worktree",
+        "backgroundColor": "bgMagenta"
       }
     ],
     [],
@@ -38,7 +48,8 @@
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
-  "colorLevel": 2,
+  "colorLevel": 3,
+  "defaultPadding": " ",
   "inheritSeparatorColors": false,
   "globalBold": false,
   "powerline": {
@@ -55,8 +66,7 @@
     "endCaps": [
       ""
     ],
-    "autoAlign": false,
-    "theme": "onedark"
-  },
-  "defaultPadding": " "
+    "theme": "tokyonight",
+    "autoAlign": true
+  }
 }
