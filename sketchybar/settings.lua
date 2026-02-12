@@ -30,8 +30,8 @@ local function load_config()
         paddings = 3,
         python_command = "python",
         weather = {
-            location = false,
-            use_shortcut = false
+            location = "Mumbai",
+            use_shortcut = true
         }
     }
 
