@@ -11,7 +11,7 @@ local weather = sbar.add("item", "widgets.weather", {
         string = icons.loading,
         font = { family = settings.font.numbers }
     },
-    update_freq = 900,
+    update_freq = 1800,
     popup = { align = "center", height = 25 }
 })
 
@@ -71,6 +71,26 @@ for i = 1, 3 do
     table.insert(popup_days, popup_value)
 end
 
+-- WMO weather code to icon mapping (used by Open-Meteo)
+local function wmo_code_to_icon(code)
+    if code == 0 then return icons.weather.sunny
+    elseif code == 1 then return icons.weather.sunny
+    elseif code == 2 then return icons.weather.partly
+    elseif code == 3 then return icons.weather.cloudy
+    elseif code >= 45 and code <= 48 then return icons.weather.foggy
+    elseif code >= 51 and code <= 55 then return icons.weather.rainy
+    elseif code >= 56 and code <= 57 then return icons.weather.sleet
+    elseif code >= 61 and code <= 65 then return icons.weather.rainy
+    elseif code >= 66 and code <= 67 then return icons.weather.sleet
+    elseif code >= 71 and code <= 77 then return icons.weather.snowy
+    elseif code >= 80 and code <= 82 then return icons.weather.rainy
+    elseif code >= 85 and code <= 86 then return icons.weather.snowy
+    elseif code >= 95 and code <= 99 then return icons.weather.stormy
+    end
+    return "?"
+end
+
+-- wttr.in condition string to icon mapping (fallback)
 local function map_condition_to_icon(cond)
     local condition = cond:lower():match("^%s*(.-)%s*$")
     if condition == "sunny" then
@@ -95,27 +115,62 @@ local function map_condition_to_icon(cond)
     return "?"
 end
 
-local function map_time_to_string(minutes)
-    local hours = math.floor(tonumber(minutes) / 100)
-    local mins = minutes % 100
+-- Open-Meteo data loader
+local function load_open_meteo(data, loc_name)
+    local temp = math.floor(data.current.temperature_2m + 0.5)
+    local code = data.current.weather_code
+    weather:set({
+        icon = { string = wmo_code_to_icon(code), drawing = true },
+        label = { string = temp .. "°" }
+    })
 
-    local suffix = "AM"
-    if hours >= 12 then
-        suffix = "PM"
-        if hours > 12 then
-            hours = hours - 12
+    location_info:set({ label = { string = loc_name } })
+
+    local times = data.hourly.time
+    local temps = data.hourly.temperature_2m
+    local codes = data.hourly.weather_code
+    local precip = data.hourly.precipitation_probability
+
+    local current_time = os.date("*t")
+    local current_hour = current_time.hour
+
+    for day_index = 1, 3 do
+        local display_date = "Today"
+        if day_index == 2 then
+            display_date = "Tomorrow"
+        elseif day_index == 3 then
+            local two_days_later = os.time() + (2 * 24 * 60 * 60)
+            display_date = tostring(os.date("%A", two_days_later))
+        end
+        popup_days[day_index].day_value:set({ label = { string = display_date }, drawing = true })
+
+        local slot = 1
+        for h = 0, 21, 3 do
+            local idx = ((day_index - 1) * 24) + h + 1
+            if idx <= #times then
+                if day_index == 1 and h < (current_hour - 3) then
+                    popup_days[day_index].hour_values[slot]:set({ drawing = false })
+                else
+                    local hour_str = string.format("%02d:00", h)
+                    local t = math.floor(temps[idx] + 0.5)
+                    local p = precip[idx] or 0
+                    local c = codes[idx] or 0
+                    popup_days[day_index].hour_values[slot]:set({
+                        icon = { string = wmo_code_to_icon(c) },
+                        label = { string = hour_str .. " | " .. t .. "°" .. " | " .. p .. "%" },
+                        drawing = true
+                    })
+                end
+            else
+                popup_days[day_index].hour_values[slot]:set({ drawing = false })
+            end
+            slot = slot + 1
         end
     end
-
-    if minutes == "0" then
-        return "12:00 AM"
-    end
-
-    local formatted_time = string.format("%2d:%02d %s", hours, mins, suffix)
-    return formatted_time
 end
 
-local function load_weather(weather_data)
+-- wttr.in data loader (fallback)
+local function load_wttr(weather_data)
     local current_condition = weather_data.current_condition[1]
     local temperature = current_condition.temp_C .. "°"
     local condition = current_condition.weatherDesc[1].value
@@ -127,11 +182,8 @@ local function load_weather(weather_data)
     local city = nearest_area.areaName[1].value
     local country = nearest_area.country[1].value
     local region = country == "United States of America" and nearest_area.region[1].value or country
-    location_info:set({
-        label = {
-            string = city .. ", " .. region
-        }
-    })
+    location_info:set({ label = { string = city .. ", " .. region } })
+
     local current_time = os.date("*t")
     local time_number = current_time.hour * 100 + current_time.min
     for day_index, day_item in pairs(weather_data.weather) do
@@ -145,17 +197,14 @@ local function load_weather(weather_data)
         popup_days[day_index].day_value:set({ label = { string = display_date }, drawing = true })
         for hourly_index, hourly_item in ipairs(day_item.hourly) do
             if day_index == 1 and time_number > tonumber(hourly_item.time) + 300 then
-                popup_days[day_index].hour_values[hourly_index]:set({
-                    drawing = false
-                })
+                popup_days[day_index].hour_values[hourly_index]:set({ drawing = false })
             else
+                local hours = math.floor(tonumber(hourly_item.time) / 100)
+                local mins = hourly_item.time % 100
+                local time_str = string.format("%02d:%02d", hours, mins)
                 popup_days[day_index].hour_values[hourly_index]:set({
-                    icon = {
-                        string = map_condition_to_icon(hourly_item.weatherDesc[1].value)
-                    },
-                    label = {
-                        string = map_time_to_string(hourly_item.time) .. " | " .. hourly_item.tempC .. "°" .. " | " .. (100 - tonumber(hourly_item.chanceofremdry)) .. "%"
-                    },
+                    icon = { string = map_condition_to_icon(hourly_item.weatherDesc[1].value) },
+                    label = { string = time_str .. " | " .. hourly_item.tempC .. "°" .. " | " .. (100 - tonumber(hourly_item.chanceofremdry)) .. "%" },
                     drawing = true
                 })
             end
@@ -163,29 +212,74 @@ local function load_weather(weather_data)
     end
 end
 
-weather:subscribe({"routine", "forced", "system_woke"}, function ()
-    sbar.exec("ipconfig getifaddr en0", function (wifi)
-        local loc_str = ""
-        if settings.weather.use_shortcut and wifi ~= "" then
-            sbar.exec("shortcuts run \"Get Location\" | tee", function (location)
-                local loc_tbl = tbl.from_string(location)
-                if loc_tbl and #loc_tbl > 2 then
-                    local country = loc_tbl[#loc_tbl]
-                    if country == "United States" then
-                        local region = loc_tbl[#loc_tbl - 1]
-                        local city, state, _ = region:match("^(.-)%s+(%a%a)%s+(%d%d%d%d%d)$")
-                        if city and state then
-                            loc_str = city .. "+" .. loc.state_abbrevation_to_name(state):gsub(" ", "+")
-                        end
-                    end
-                end
+-- Resolve location name from coordinates via Open-Meteo geocoding (reverse)
+local function fetch_open_meteo(lat, lon, loc_name)
+    local url = "https://api.open-meteo.com/v1/forecast?"
+              .. "latitude=" .. lat .. "&longitude=" .. lon
+              .. "&current=temperature_2m,weather_code"
+              .. "&hourly=temperature_2m,weather_code,precipitation_probability"
+              .. "&timezone=auto&forecast_days=3"
+    sbar.exec("curl -s --max-time 10 '" .. url .. "'", function(result)
+        if result == "" then
+            -- Open-Meteo failed, fall back to wttr.in
+            local wttr_loc = settings.weather.location or ""
+            sbar.exec("curl -s --max-time 10 'https://wttr.in/" .. wttr_loc .. "?format=j1'", function(wttr_result)
+                if wttr_result ~= "" then load_wttr(wttr_result) end
             end)
+            return
         end
-        if loc_str == "" and settings.weather.location then
-            loc_str = settings.weather.location
-        end
-        sbar.exec("curl \"wttr.in/" .. loc_str .. "?format=j1\"", load_weather)
+        load_open_meteo(result, loc_name)
     end)
+end
+
+-- Geocode a location name to lat/lon, then fetch weather
+local function geocode_and_fetch(loc_name)
+    local encoded = loc_name:gsub(" ", "%%20")
+    local url = "https://geocoding-api.open-meteo.com/v1/search?name=" .. encoded .. "&count=1"
+    sbar.exec("curl -s --max-time 10 '" .. url .. "'", function(result)
+        if result == "" or not result.results or #result.results == 0 then
+            -- Geocoding failed, fall back to wttr.in
+            local wttr_loc = settings.weather.location or ""
+            sbar.exec("curl -s --max-time 10 'https://wttr.in/" .. wttr_loc .. "?format=j1'", function(wttr_result)
+                if wttr_result ~= "" then load_wttr(wttr_result) end
+            end)
+            return
+        end
+        local r = result.results[1]
+        local display = r.name .. ", " .. (r.admin1 or r.country)
+        fetch_open_meteo(r.latitude, r.longitude, display)
+    end)
+end
+
+weather:subscribe({"routine", "forced", "system_woke"}, function ()
+    if settings.weather.use_shortcut then
+        sbar.exec("ipconfig getifaddr en0", function (wifi)
+            if wifi ~= "" then
+                sbar.exec("shortcuts run \"Get Location\" | tee", function (location)
+                    local loc_name = ""
+                    local loc_tbl = tbl.from_string(location)
+                    if loc_tbl and #loc_tbl > 0 then
+                        loc_name = loc_tbl[1]
+                    end
+                    if loc_name ~= "" then
+                        geocode_and_fetch(loc_name)
+                    elseif settings.weather.location then
+                        geocode_and_fetch(settings.weather.location)
+                    else
+                        geocode_and_fetch("Mumbai")
+                    end
+                end)
+            elseif settings.weather.location then
+                geocode_and_fetch(settings.weather.location)
+            else
+                geocode_and_fetch("Mumbai")
+            end
+        end)
+    elseif settings.weather.location then
+        geocode_and_fetch(settings.weather.location)
+    else
+        geocode_and_fetch("Mumbai")
+    end
   end)
 
 weather:subscribe("mouse.clicked", function()
