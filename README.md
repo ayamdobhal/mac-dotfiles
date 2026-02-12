@@ -10,7 +10,7 @@ macOS configuration files managed from `~/.config`.
 |-----------|-------------|
 |**ghostty** | Ghostty terminal config |
 | **nvim** | Neovim setup with Lazy plugin manager |
-| **sketchybar** | Custom status bar in Lua — workspaces, media, widgets (CPU, RAM, weather, battery, Spotify, Claude usage, S&P 500) |
+| **sketchybar** | Custom status bar in Lua — workspaces, media, widgets (CPU, RAM, weather, battery, Spotify, Claude usage) |
 | **yabai** | Tiling window manager config + window cycling scripts |
 | **skhd** | Hotkey daemon keybindings (pairs with yabai) |
 | **fastfetch** | System info fetch with custom logo |
