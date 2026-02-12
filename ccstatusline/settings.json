@@ -5,46 +5,43 @@
       {
         "id": "1",
         "type": "model",
-        "color": "cyan"
+        "color": "brightGreen"
       },
       {
         "id": "3",
         "type": "context-length",
-        "color": "brightBlack"
+        "color": "brightRed"
       },
       {
         "id": "845b4161-1264-4a7d-8d8f-526b3e306ee7",
         "type": "context-percentage",
-        "backgroundColor": "bgBrightGreen"
-      },
-      {
-        "id": "5",
-        "type": "git-branch",
-        "color": "magenta"
-      },
-      {
-        "id": "7",
-        "type": "git-changes",
-        "color": "yellow"
-      },
-      {
-        "id": "c191da7b-57e1-4641-a462-de6a200b5d08",
-        "type": "session-cost",
-        "backgroundColor": "bgRed"
-      },
-      {
-        "id": "f3f16435-ddc2-4aad-8344-4771bb677f12",
-        "type": "session-clock",
-        "backgroundColor": "bgCyan"
-      },
-      {
-        "id": "31dd066f-3dab-4ee4-adf4-8c21e70442f8",
-        "type": "git-worktree",
-        "backgroundColor": "bgMagenta"
+        "color": "brightYellow"
       }
     ],
-    [],
-    []
+    [
+      {
+        "id": "0eb5bace-2505-4b5b-bd98-68dbeb7c8a9d",
+        "type": "git-branch",
+        "color": "brightCyan"
+      },
+      {
+        "id": "6a31d365-8f8f-4d25-9a5a-492ebb454570",
+        "type": "git-changes",
+        "color": "brightMagenta"
+      },
+      {
+        "id": "7b27b75b-2699-4f2e-a6c1-08e3b100a737",
+        "type": "session-clock",
+        "color": "white"
+      }
+    ],
+    [
+      {
+        "id": "cfc2dc12-9558-4bf7-982b-a863537f2bc8",
+        "type": "session-cost",
+        "color": "brightWhite"
+      }
+    ]
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
@@ -53,7 +50,7 @@
   "inheritSeparatorColors": false,
   "globalBold": false,
   "powerline": {
-    "enabled": true,
+    "enabled": false,
     "separators": [
       ""
     ],
@@ -67,6 +64,6 @@
       ""
     ],
     "theme": "tokyonight",
-    "autoAlign": true
+    "autoAlign": false
   }
 }
