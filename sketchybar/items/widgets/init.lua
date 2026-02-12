@@ -3,8 +3,7 @@ local tbl = require("utils.tbl")
 
 local widgets = {
     "weather",
-    "settings",
-    "clipboard",
+    "claude",
     "battery",
     "volume",
     "wifi",
