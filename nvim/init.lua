@@ -74,6 +74,12 @@ map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help" })
 
 ---------------------------------------------------------------------
+-- Git
+---------------------------------------------------------------------
+
+map("n", "<leader>gb", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle git blame" })
+
+---------------------------------------------------------------------
 -- Comment toggle
 ---------------------------------------------------------------------
 
