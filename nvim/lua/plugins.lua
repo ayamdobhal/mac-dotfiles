@@ -198,7 +198,34 @@ require("lazy").setup({
   {
     "lewis6991/gitsigns.nvim",
     config = function()
-      require("gitsigns").setup()
+      require("gitsigns").setup({
+        current_line_blame = false,
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = "eol",
+          delay = 300,
+        },
+        current_line_blame_formatter = "  <author> · <author_time:%Y-%m-%d> · <summary>",
+      })
+    end,
+  },
+
+  ---------------------------------------------------------------------------
+  -- 🧱 Indent Guides & Scope Highlighting
+  ---------------------------------------------------------------------------
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("ibl").setup({
+        indent = { char = "│" },
+        scope = {
+          enabled = true,
+          show_start = true,
+          show_end = false,
+        },
+      })
     end,
   },
 
