@@ -95,6 +95,25 @@ local popup_today_tools = sbar.add("item", {
     label = { string = "??", width = popup_width / 2, align = "right" },
 })
 
+-- Popup: estimated cost (from token usage)
+local popup_cost_daily = sbar.add("item", {
+    position = "popup." .. claude.name,
+    icon = { string = "Cost Today:", width = popup_width / 2, align = "left" },
+    label = { string = "??", width = popup_width / 2, align = "right", color = colors.green },
+})
+
+local popup_cost_weekly = sbar.add("item", {
+    position = "popup." .. claude.name,
+    icon = { string = "Cost Weekly:", width = popup_width / 2, align = "left" },
+    label = { string = "??", width = popup_width / 2, align = "right", color = colors.green },
+})
+
+local popup_cost_monthly = sbar.add("item", {
+    position = "popup." .. claude.name,
+    icon = { string = "Cost Monthly:", width = popup_width / 2, align = "left" },
+    label = { string = "??", width = popup_width / 2, align = "right", color = colors.green },
+})
+
 sbar.add("bracket", "widgets.claude.bracket", { claude.name }, {
     background = { color = colors.bg1 },
 })
@@ -201,11 +220,15 @@ local function update_popup(data)
     -- Live stats from JSONL files
     sbar.exec(stats_cmd, function(result)
         if not result or result == "" then return end
-        local sessions, messages, tool_calls = result:match("(%d+)|(%d+)|(%d+)")
+        local sessions, messages, tool_calls, cost_d, cost_w, cost_m =
+            result:match("(%d+)|(%d+)|(%d+)|([%d%.]+)|([%d%.]+)|([%d%.]+)")
         if sessions then
             popup_today_sessions:set({ label = sessions })
             popup_today_msgs:set({ label = messages })
             popup_today_tools:set({ label = tool_calls })
+            popup_cost_daily:set({ label = { string = "$" .. cost_d, color = colors.green } })
+            popup_cost_weekly:set({ label = { string = "$" .. cost_w, color = colors.green } })
+            popup_cost_monthly:set({ label = { string = "$" .. cost_m, color = colors.green } })
         end
     end)
 end
