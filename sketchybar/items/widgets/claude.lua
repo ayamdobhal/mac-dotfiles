@@ -6,7 +6,7 @@ local popup_width = 200
 -- Curl command to fetch usage from the OAuth API
 local usage_cmd = "curl -s --max-time 10 'https://api.anthropic.com/api/oauth/usage'"
     .. " -H 'Authorization: Bearer '$(security find-generic-password -s 'Claude Code-credentials' -w"
-    .. " | /usr/bin/python3 -c \"import sys,json; print(json.loads(sys.stdin.read())['claudeAiOauth']['accessToken'])\")"
+    .. " | /usr/bin/python3 -c \"import sys,re; m=re.search(r'\\\"accessToken\\\":\\\"([^\\\"]+)\\\"', sys.stdin.read()); print(m.group(1) if m else '')\")"
     .. " -H 'anthropic-beta: oauth-2025-04-20'"
     .. " -H 'Accept: application/json'"
 
