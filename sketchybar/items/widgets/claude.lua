@@ -23,7 +23,7 @@ local claude = sbar.add("item", "widgets.claude", {
         color = colors.magenta,
     },
     label = { font = { family = settings.font.numbers } },
-    update_freq = 120,
+    update_freq = 300,
     popup = { align = "center" },
 })
 
@@ -157,12 +157,19 @@ local function parse_reset_time(iso_str)
     end
 end
 
+local last_usage = nil
+
 local function fetch_usage(callback)
     sbar.exec(usage_cmd, function(result)
         if not result or result == "" then
-            callback(nil)
+            callback(last_usage)
             return
         end
+        if result.error then
+            callback(last_usage)
+            return
+        end
+        last_usage = result
         callback(result)
     end)
 end
