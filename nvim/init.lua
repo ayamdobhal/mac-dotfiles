@@ -23,5 +23,8 @@ require("lazy").setup({ import = "plugins" })
 -- LSP servers (after plugins so blink.cmp is available)
 require("config.lsp")
 
+-- Buffer path utilities
+require("config.buffer-path").setup()
+
 -- Keymaps (after everything else is loaded)
 require("config.keymaps")

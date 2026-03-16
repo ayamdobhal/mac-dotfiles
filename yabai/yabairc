@@ -21,7 +21,7 @@ yabai -m config active_window_opacity 1.0
 yabai -m config normal_window_opacity 1.0
 
 yabai -m rule --add app="^Code$" opacity=0.8
-yabai -m rule --add app="^Spotify$" opacity=0.8
+# yabai -m rule --add app="^Spotify$" opacity=0.8
 yabai -m rule --add app="^Cursor$" opacity=0.8
 
 
