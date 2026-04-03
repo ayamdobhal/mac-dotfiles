@@ -12,9 +12,12 @@
 
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    claude-code.url = "github:sadjow/claude-code-nix";
+    claude-code.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, nix-darwin, home-manager, spicetify-nix, ... }: {
+  outputs = { nixpkgs, nix-darwin, home-manager, spicetify-nix, claude-code, ... }: {
     darwinConfigurations."work" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -26,7 +29,7 @@
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "backup";
           home-manager.users.ayamdobhal = import ./modules/home;
-          home-manager.extraSpecialArgs = { inherit spicetify-nix; };
+          home-manager.extraSpecialArgs = { inherit spicetify-nix claude-code; };
         }
       ];
     };
@@ -42,7 +45,7 @@
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "backup";
           home-manager.users.ayamdobhal = import ./modules/home;
-          home-manager.extraSpecialArgs = { inherit spicetify-nix; };
+          home-manager.extraSpecialArgs = { inherit spicetify-nix claude-code; };
         }
       ];
     };
@@ -50,7 +53,7 @@
     homeConfigurations."ayam@linux" = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       modules = [ ./modules/home ];
-      extraSpecialArgs = { inherit spicetify-nix; };
+      extraSpecialArgs = { inherit spicetify-nix claude-code; };
     };
   };
 }
