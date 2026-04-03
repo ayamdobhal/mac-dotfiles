@@ -335,7 +335,7 @@ local function build_recently_played_cmd(token)
   return "curl -s --max-time 10 -w '\\nHTTP_STATUS:%{http_code}'"
     .. " -H 'Authorization: Bearer " .. token .. "'"
     .. " 'https://api.spotify.com/v1/me/player/recently-played?limit=1'"
-    .. " | " .. "/opt/homebrew/bin/python3" .. [[ -c "
+    .. " | " .. "python3" .. [[ -c "
 import sys, json
 raw = sys.stdin.read()
 status_line = [l for l in raw.split('\n') if l.startswith('HTTP_STATUS:')]
@@ -529,7 +529,7 @@ local function build_playback_cmd(token)
   return "curl -s --max-time 10 -w '\\nHTTP_STATUS:%{http_code}'"
     .. " -H 'Authorization: Bearer " .. token .. "'"
     .. " 'https://api.spotify.com/v1/me/player'"
-    .. " | " .. "/opt/homebrew/bin/python3" .. [[ -c "
+    .. " | " .. "python3" .. [[ -c "
 import sys, json
 raw = sys.stdin.read()
 status_line = [l for l in raw.split('\n') if l.startswith('HTTP_STATUS:')]
@@ -671,7 +671,7 @@ local function build_devices_cmd(token)
   return "curl -s --max-time 10 -w '\\nHTTP_STATUS:%{http_code}'"
     .. " -H 'Authorization: Bearer " .. token .. "'"
     .. " 'https://api.spotify.com/v1/me/player/devices'"
-    .. " | " .. "/opt/homebrew/bin/python3" .. [[ -c "
+    .. " | " .. "python3" .. [[ -c "
 import sys, json
 raw = sys.stdin.read()
 status_line = [l for l in raw.split('\n') if l.startswith('HTTP_STATUS:')]
