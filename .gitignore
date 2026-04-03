@@ -2,3 +2,4 @@ dev-recap
 cabal
 raycast/extensions
 invideo
+nix-config/result
