@@ -6,6 +6,14 @@ in {
 
   programs.spicetify = {
     enable = true;
+    theme = {
+      name = "marketplace";
+      src = pkgs.writeTextDir "color.ini" "";
+      injectCss = false;
+      injectThemeJs = false;
+      replaceColors = false;
+      overwriteAssets = false;
+    };
     enabledCustomApps = with spicePkgs.apps; [
       marketplace
     ];

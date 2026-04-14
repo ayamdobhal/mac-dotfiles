@@ -16,12 +16,10 @@
       # dev tools
       "ghostty@tip"
       "claude"
-      "claude-code"
 
       # apps
       "bitwarden"
       "discord"
-      "spotify"
       "telegram"
       "steam"
       "protonvpn"
