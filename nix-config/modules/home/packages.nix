@@ -17,12 +17,14 @@
     bun
 
     # neovim / sketchybar deps
+    tree-sitter
     lua5_4
     luarocks
     basedpyright
     rust-analyzer
     elixir-ls
     elixir
+    vtsls
 
     # fonts
     nerd-fonts.hack

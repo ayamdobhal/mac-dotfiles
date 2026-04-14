@@ -126,6 +126,7 @@
       gsh = "git show";
       gsps = "git show --pretty=short --show-signature";
 
+      gsta = "git stash";
       gstall = "git stash --all";
       gstaa = "git stash apply";
       gstc = "git stash clear";

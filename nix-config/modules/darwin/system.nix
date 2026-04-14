@@ -28,7 +28,7 @@
     KeyRepeat = 2;
     NSAutomaticSpellingCorrectionEnabled = false;
     NSAutomaticCapitalizationEnabled = false;
-    "com.apple.swipescrolldirection" = true;
+    "com.apple.swipescrolldirection" = false;
   };
 
   # Screenshots

@@ -18,7 +18,7 @@
   };
 
   outputs = { nixpkgs, nix-darwin, home-manager, spicetify-nix, claude-code, ... }: {
-    darwinConfigurations."work" = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."ayam-magbog-work" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
         ./hosts/work
