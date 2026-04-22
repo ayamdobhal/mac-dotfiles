@@ -160,6 +160,9 @@
     };
 
     initContent = ''
+      # claude-code native install
+      path=("$HOME/.local/bin" $path)
+
       # oh-my-zsh git helper functions (used by dynamic aliases below)
       function git_current_branch() {
         local ref

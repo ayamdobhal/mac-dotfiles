@@ -8,6 +8,9 @@
     taps = [
       "shaunsingh/sfmono-nerd-font-ligaturized"
     ];
+    brews = [
+      "spicetify-cli"
+    ];
     casks = [
       # browsers
       "arc"
@@ -20,7 +23,9 @@
       # apps
       "bitwarden"
       "discord"
+      "spotify"
       "telegram"
+      "whatsapp"
       "steam"
       "protonvpn"
       "tailscale-app"
