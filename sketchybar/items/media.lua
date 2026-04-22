@@ -317,6 +317,67 @@ local function animate_detail(detail)
 end
 
 -- ── Album Art ─────────────────────────────────────────────────────
+local function show_spotify_fallback()
+  media_cover:set({
+    icon = { drawing = true, string = icons.media.spotify, color = spotify_green },
+    background = { image = { string = "" }, color = colors.bg2, drawing = true },
+  })
+  popup_art:set({
+    icon = { drawing = true },
+    background = { image = { string = "" }, color = colors.bg2 },
+  })
+end
+
+local function download_and_set(url, cache_key, on_success)
+  local filename = art_cache_dir .. "/" .. url:gsub("[^%w]", "_") .. ".jpg"
+  sbar.exec("[ -f '" .. filename .. "' ] && echo 'exists' || curl -s --max-time 10 -o '" .. filename .. "' '" .. url .. "' && echo 'downloaded'", function(result)
+    if type(result) ~= "string" then return end
+    if result:match("exists") or result:match("downloaded") then
+      on_success(filename)
+    end
+  end)
+end
+
+local function set_album_art(small_url, large_url)
+  if (not small_url or small_url == "") and (not large_url or large_url == "") then
+    show_spotify_fallback()
+    return
+  end
+
+  -- Bar cover: use small image (300px) scaled to 28px
+  local s_url = (small_url and small_url ~= "") and small_url or large_url
+  if s_url ~= current_art_small then
+    current_art_small = s_url
+    download_and_set(s_url, "small", function(filename)
+      -- Determine scale: image is ~300px, we want 28px
+      media_cover:set({
+        icon = { drawing = false },
+        background = {
+          image = { string = filename, scale = 0.09, corner_radius = 5 },
+          color = colors.transparent,
+          drawing = true,
+        },
+      })
+    end)
+  end
+
+  -- Popup art: use large image (640px) scaled to 80px
+  local l_url = (large_url and large_url ~= "") and large_url or s_url
+  if l_url ~= current_art_large then
+    current_art_large = l_url
+    download_and_set(l_url, "large", function(filename)
+      -- Determine scale: image is ~640px, we want 80px
+      popup_art:set({
+        icon = { drawing = false },
+        background = {
+          image = { string = filename, scale = 0.125, corner_radius = 8 },
+          color = colors.transparent,
+        },
+      })
+    end)
+  end
+end
+
 local function show_last_played(track, artist, album, art_small, art_large)
   is_playing = false
   set_album_art(art_small, art_large)
@@ -437,67 +498,6 @@ local function show_idle()
   popup_controls:set({ icon = { string = controls_string(icons.media.play) } })
 
   fetch_recently_played()
-end
-
-local function show_spotify_fallback()
-  media_cover:set({
-    icon = { drawing = true, string = icons.media.spotify, color = spotify_green },
-    background = { image = { string = "" }, color = colors.bg2, drawing = true },
-  })
-  popup_art:set({
-    icon = { drawing = true },
-    background = { image = { string = "" }, color = colors.bg2 },
-  })
-end
-
-local function download_and_set(url, cache_key, on_success)
-  local filename = art_cache_dir .. "/" .. url:gsub("[^%w]", "_") .. ".jpg"
-  sbar.exec("[ -f '" .. filename .. "' ] && echo 'exists' || curl -s --max-time 10 -o '" .. filename .. "' '" .. url .. "' && echo 'downloaded'", function(result)
-    if type(result) ~= "string" then return end
-    if result:match("exists") or result:match("downloaded") then
-      on_success(filename)
-    end
-  end)
-end
-
-local function set_album_art(small_url, large_url)
-  if (not small_url or small_url == "") and (not large_url or large_url == "") then
-    show_spotify_fallback()
-    return
-  end
-
-  -- Bar cover: use small image (300px) scaled to 28px
-  local s_url = (small_url and small_url ~= "") and small_url or large_url
-  if s_url ~= current_art_small then
-    current_art_small = s_url
-    download_and_set(s_url, "small", function(filename)
-      -- Determine scale: image is ~300px, we want 28px
-      media_cover:set({
-        icon = { drawing = false },
-        background = {
-          image = { string = filename, scale = 0.09, corner_radius = 5 },
-          color = colors.transparent,
-          drawing = true,
-        },
-      })
-    end)
-  end
-
-  -- Popup art: use large image (640px) scaled to 80px
-  local l_url = (large_url and large_url ~= "") and large_url or s_url
-  if l_url ~= current_art_large then
-    current_art_large = l_url
-    download_and_set(l_url, "large", function(filename)
-      -- Determine scale: image is ~640px, we want 80px
-      popup_art:set({
-        icon = { drawing = false },
-        background = {
-          image = { string = filename, scale = 0.125, corner_radius = 8 },
-          color = colors.transparent,
-        },
-      })
-    end)
-  end
 end
 
 -- ── Playback Controls ─────────────────────────────────────────────
