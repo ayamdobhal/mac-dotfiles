@@ -8,6 +8,7 @@
       lgt = "lazygit";
       python = "python3";
       claude = "claude --dangerously-skip-permissions";
+      nrs = "sudo darwin-rebuild switch --flake ~/.config/nix-config";
 
       # git aliases (oh-my-zsh git plugin)
       g = "git";
