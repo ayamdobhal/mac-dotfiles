@@ -1,7 +1,5 @@
-{ pkgs, claude-code, ... }: {
-  home.packages = [
-    claude-code.packages.${pkgs.system}.default
-  ] ++ (with pkgs; [
+{ pkgs, ... }: {
+  home.packages = with pkgs; [
     # core utils
     bat
     bottom
@@ -28,5 +26,5 @@
 
     # fonts
     nerd-fonts.hack
-  ]);
+  ];
 }
