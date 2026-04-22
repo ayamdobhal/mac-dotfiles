@@ -1,0 +1,2209 @@
+/* Spicetify Custom Theme */
+
+:root {
+  --font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --border-radius: 8px;
+
+  /* Populated by dynamic-theme.js */
+  --image_url: url('');
+  --is_light: 0;
+}
+
+body {
+  font-family: var(--font-family);
+}
+
+/* ==================== Blurred album art background ==================== */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--image_url);
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px) brightness(0.7) saturate(1.15);
+  transition: background-image 500ms ease;
+  pointer-events: none;
+  animation: ambient-drift 40s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes ambient-drift {
+  from {
+    transform: scale(1.15) translate(-2%, -1.5%);
+  }
+  to {
+    transform: scale(1.25) translate(2%, 2%);
+  }
+}
+
+body.playback-paused::before {
+  animation-play-state: paused;
+}
+
+/* Top-level containers transparent so blurred album art shows through */
+.Root__top-container,
+.Root__main-view,
+.main-view-container__scroll-node,
+.under-main-view {
+  background: transparent !important;
+}
+
+/* Left + right panels match main content: 40% dark tint + backdrop blur */
+.Root__nav-bar,
+.Root__right-sidebar,
+[class*="NavBar"],
+[class*="RightSidebar"] {
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Inner containers of the left/right panels must be transparent so their
+   parent's dark tint shows through (instead of stacking or overriding). */
+.main-navBar-mainNav,
+.main-yourLibraryX-library,
+.main-yourLibraryX-libraryContainer,
+.main-yourLibraryX-header,
+.main-yourLibraryX-libraryItemContainer,
+.main-yourLibraryX-libraryRootlist,
+.NowPlayingView,
+#Desktop_PanelContainer_Id,
+.main-nowPlayingView-section,
+.main-nowPlayingView-mainContainer,
+.main-nowPlayingView-panel,
+.main-nowPlayingView-nowPlayingWidget {
+  background: transparent !important;
+}
+
+/* Override CSS vars at sidebar scope — the aside's inline style references
+   --background-elevated-base. Resetting that var here propagates via
+   custom-property inheritance to every descendant that uses it. */
+.Root__right-sidebar,
+.Root__nav-bar {
+  --background-elevated-base: transparent !important;
+  --background-base: transparent !important;
+  --section-background-base: transparent !important;
+}
+
+/* Flatten bg on any intermediate hashed wrapper divs inside the right panel */
+.Root__right-sidebar > div,
+.Root__right-sidebar > div > div,
+.Root__right-sidebar > div > div > div,
+.Root__right-sidebar > div > div > div > div {
+  background-color: transparent !important;
+}
+
+/* Disable video previews — force album art always */
+.NowPlayingView video,
+.main-nowPlayingView-coverArtContainer video,
+.main-nowPlayingView-contextItemVisualEnhancement video,
+[class*="canvasVideoContainer"],
+#VideoPlayerNpv_ReactPortal {
+  display: none !important;
+}
+
+/* Hide all direct children of the cover-art container except the cover art
+   itself — removes the video wrapper (hashed class) that was taking space */
+.main-nowPlayingView-coverArtContainer > *:not(.main-nowPlayingView-coverArtVisualEnhancement) {
+  display: none !important;
+}
+
+.main-nowPlayingView-actionButtonContainer,
+button[aria-label="Switch to video"],
+button[aria-label="Switch to art"] {
+  display: none !important;
+}
+
+/* Collapse residual height from the removed video row, but keep a reasonable
+   gap between the art and the track info below */
+.main-nowPlayingView-nowPlayingGrid {
+  gap: 1rem !important;
+  row-gap: 1rem !important;
+  grid-template-rows: auto auto !important;
+}
+
+.main-nowPlayingView-coverArtContainer {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+/* Space between the sticky header and the content below (art overlap fix) */
+.main-nowPlayingView-mainContainer {
+  padding-top: 3rem !important;
+}
+
+.main-nowPlayingView-headerContainer {
+  padding-bottom: 1rem !important;
+}
+
+/* Force main cover art visible even when Spotify toggles it off */
+.main-nowPlayingView-coverArtVisualEnhancement,
+.main-nowPlayingView-coverArtVisualEnhancement[aria-hidden="true"],
+.main-nowPlayingView-coverArtVisualEnhancement > *,
+.main-nowPlayingView-coverArt,
+.main-nowPlayingView-coverArt .cover-art,
+.main-nowPlayingView-coverArt .cover-art-image,
+.main-nowPlayingView-coverArt img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Hide the minimized-panel thumbnail — we always show the big art */
+.main-nowPlayingView-contextItemVisualEnhancement,
+[data-testid="minimized-track-visual-enhancement"] {
+  display: none !important;
+}
+
+/* Kill the ::before pseudo-element on contextItemInfo that reserved space
+   for the video-mode action bar. */
+.main-nowPlayingView-contextItemInfo::before {
+  display: none !important;
+  content: none !important;
+  height: 0 !important;
+}
+
+/* Explicit badge: on this build the wrapper fill and the glyph both resolve
+   to the same currentColor, so the "E" disappears into the box. Force the
+   inner glyph to black against the wrapper's tint. */
+.x-explicit-label .x-explicit-icon {
+  color: #000 !important;
+}
+
+/* Primary play button ("▶" circle on playlists/albums/artist): the accent
+   fill and the inner glyph both resolve to the same accent tone on this
+   build, leaving the triangle invisible. Black against the bright-accent
+   fill reads across every artist-derived accent. */
+.main-playButton-PlayButton button .e-10180-icon,
+.main-playButton-PlayButton button .e-10180-icon path,
+button[data-encore-id="buttonPrimary"] .e-10180-icon,
+button[data-encore-id="buttonPrimary"] .e-10180-icon path {
+  color: #000 !important;
+  fill: #000 !important;
+}
+
+/* Selected filter chip ("All" / genre pills): encore-inverted-light-set
+   resolves the label to the same tone as the filled pill, so the text
+   disappears. Force black for legibility on the selected state. */
+.e-10180-legacy-chip--selected .e-10180-legacy-chip__inner--selected,
+.e-10180-legacy-chip--selected .e-10180-legacy-chip__inner {
+  color: #000 !important;
+}
+
+/* Playlist page content wrapper — drop the dark fill so our blurred album
+   art bg shows through behind the track list. */
+.playlist-playlist-playlistContent {
+  background: transparent !important;
+}
+
+/* Action-bar background: Spotify fills this element with the entity's
+   accent color via inline style on artist/album/playlist/profile pages.
+   It's a pure background layer with no content, so hide it outright — the
+   sibling ActionBarContainer still renders normally. */
+.main-actionBarBackground-background,
+.playlist-playlist-actionBarBackground-background {
+  display: none !important;
+}
+
+/* Kill --background-base inside the main view — playlist/artist/album page
+   wrappers use it as their fill. Sidebars override it locally already. */
+.Root__main-view {
+  --background-base: transparent !important;
+}
+
+/* Entity header (profile, artist, album) solid-color layer + its overlay
+   variant. Hidden so the entity image fades to transparent on scroll instead
+   of morphing into a solid color fill. */
+.main-entityHeader-backgroundColor,
+.main-entityHeader-backgroundColor.main-entityHeader-overlay,
+.main-entityHeader-overlay {
+  display: none !important;
+}
+
+/* Banner on artist/album/profile pages: opacity is set by JS in layout.ts
+   directly on the element (OverlayScrollbars makes CSS scroll-timeline
+   unusable). Nothing for CSS to do here. */
+
+/* Solid-color overlay that Spotify fades in on scroll to replace the banner.
+   It's an empty div carrying --background-base + --background-elevated-* CSS
+   vars inline. Hide it entirely so the blurred album bg shows through. */
+div[style*="--background-base"][style*="--background-elevated"]:empty {
+  display: none !important;
+}
+
+/* Kill Spotify's own accent gradient + home header (HPTO) bg */
+.main-view-container__scroll-node-child,
+[class*="backgroundNoise"],
+[style*="--background-base"],
+[class*="HomeHeader"],
+[class*="home-header"],
+[class*="hpto" i],
+.main-home-homeHeader-homeHeader,
+[class*="EntityHeader"] {
+  background: transparent !important;
+}
+
+/* Top nav bar: transparent container, blend with blurred bg. Stack above
+   the main-view so horizontally-scrolling shelves (carousels, grids) can't
+   bleed over the search bar. .Root__main-view is position: relative for
+   the lyrics slot, so without an explicit z-index here the nav would
+   render in source order underneath. */
+.Root__globalNav,
+#global-nav-bar {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Sticky top-bar bg layer on scroll — stay transparent, just apply a blur
+   so content underneath reads clearly. */
+.main-topBar-background,
+.main-trackList-trackListHeader {
+  background: transparent !important;
+  backdrop-filter: blur(40px) !important;
+  -webkit-backdrop-filter: blur(40px) !important;
+}
+
+/* Home button + search bar + nav (back/forward) + friend-activity/lyrics
+   button: match sidebar translucent look. Without this, the icon-only
+   buttons can blend into the blurred album-art bg whenever the cover is
+   mostly one hue (accent ≈ background). The translucent dark pill is
+   bg-independent, so contrast holds for any cover. */
+button.main-globalNav-navLink[aria-label="Home"],
+.main-globalNav-link-icon[aria-label="Home"],
+.main-globalNav-searchInputWrapper,
+button[aria-label="Go back"],
+button[aria-label="Go forward"],
+[data-testid="top-bar-back-button"],
+[data-testid="top-bar-forward-button"],
+button[aria-label="What's New"],
+.main-topBar-buddyFeed,
+button.custom-navlink[aria-label="Marketplace"],
+button.main-globalNav-navLink[aria-label="Marketplace"],
+[data-lyrics-btn="1"] {
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border-radius: 999px;
+}
+
+/* Back/forward sit on default-width pill buttons → look like stadiums.
+   Force a 1:1 aspect so the translucent bg becomes a proper circle. */
+button[aria-label="Go back"],
+button[aria-label="Go forward"],
+[data-testid="top-bar-back-button"],
+[data-testid="top-bar-forward-button"] {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Search input inside wrapper: transparent so parent's tint shows */
+input.main-topBar-searchBar,
+input.x-searchInput-searchInputInput {
+  background: transparent !important;
+}
+
+/* Recent searches / suggestions dropdown: drop the solid backdrop and
+   blur the album art behind it to match the top-bar look. Spotify reuses
+   main-actionBar-ActionBarContainer for the in-page action bar on
+   playlists/albums too — exclude anything inside .Root__main-view so
+   only the dropdown in the top nav gets the translucent treatment. */
+.main-actionBar-ActionBarContainer:not(.Root__main-view *) {
+  background: transparent !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+}
+
+/* When the dropdown is mounted inside the search pill, the pill's own
+   backdrop-filter becomes the dropdown's backdrop root — nested blur just
+   re-blurs an already-blurred 40% black overlay and looks identical.
+   Strip the wrapper's own bg + blur only while the dropdown is present so
+   the dropdown's 30px blur can sample the album art directly. */
+.main-globalNav-searchInputWrapper:has(.main-actionBar-ActionBarContainer) {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Home page header has an inline-styled accent bg — force transparent */
+.main-home-homeHeader,
+.main-home-homeHeader *,
+[class*="home-header" i],
+[class*="HomeHeader" i],
+[class*="mainSectionTop" i] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Remove edge-fade gradient on horizontal scrollable carousels/shelves */
+[class*="Shelf"],
+[class*="shelf"],
+[class*="horizontalScroll"],
+[class*="HorizontalScroll"],
+[class*="horizontalList"],
+[class*="HorizontalList"],
+.search-searchCategory-contentArea,
+.search-searchCategory-categoryGrid,
+[style*="--scrollAnimationRangeStart"],
+[style*="--scrollAnimationRangeEnd"],
+[style*="--scrollAnimationRange"] {
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  --scrollAnimationRangeStart: 0 !important;
+  --scrollAnimationRangeEnd: 0 !important;
+}
+
+[class*="Shelf"]::before,
+[class*="Shelf"]::after,
+[class*="shelf"]::before,
+[class*="shelf"]::after,
+[class*="horizontalScroll"]::before,
+[class*="horizontalScroll"]::after,
+[data-testid*="shelf" i]::before,
+[data-testid*="shelf" i]::after,
+.search-searchCategory-contentArea::before,
+.search-searchCategory-contentArea::after {
+  display: none !important;
+}
+
+/* Subtle dark tint on the main content area so cards read against the bg */
+.main-view-container {
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ==================== Hide native podcast UI ==================== */
+
+/* Home filter chip "Podcasts" */
+.main-home-filterChipsContainer button[aria-label="Podcasts" i],
+.main-home-filterChipsContainer [data-carousel-item] button[aria-label="Podcasts" i] {
+  display: none !important;
+}
+
+/* Top-level podcast browse entries */
+a[href="/genre/podcasts-web"],
+a[href="/genre/podcasts"],
+a[href^="/genre/podcasts-"] {
+  display: none !important;
+}
+
+/* Also hide Spotify-native podcast nav buttons if any */
+.Root__globalNav button[aria-label*="Podcast" i],
+.Root__globalNav a[aria-label*="Podcast" i],
+#global-nav-bar button[aria-label*="Podcast" i],
+#global-nav-bar a[aria-label*="Podcast" i],
+.main-globalNav-navLink[aria-label*="Podcast" i] {
+  display: none !important;
+}
+
+/* ==================== Bottom Bar Removal ==================== */
+
+.Root__now-playing-bar,
+[data-testid="now-playing-bar"] {
+  display: none !important;
+}
+
+/* Floating popouts: Connect bar, device picker, Listen-on-your-speaker
+   notifications, toasts, and anything else that hangs off the bottom bar. */
+.main-connectBar-container,
+.connect-device-list-container,
+[data-testid="connect-device-picker"],
+[data-testid="connect-device-list"],
+[data-testid*="connectBar" i],
+[data-testid*="connect-bar" i],
+[data-testid*="queue-bar" i],
+[class*="ConnectAside"],
+[class*="ConnectBar"],
+.main-notification-root-container,
+[data-testid*="notification-bar" i],
+[data-testid*="toast" i],
+[aria-label*="Listen on" i],
+[aria-label*="Connect to a device" i] {
+  display: none !important;
+}
+
+.Root__nav-bar,
+.Root__right-sidebar {
+  align-self: stretch;
+  min-height: 0;
+}
+
+/* Keep Spotify's 4-row grid structure but force row 3 (main) to 1fr so any
+   leftover viewport space below goes into the panels rather than leaving a
+   gap at the bottom. */
+.Root__top-container {
+  grid-template-rows: auto auto 1fr 0 !important;
+}
+
+
+/* ==================== Lyrics route: our view replaces Spotify's ==================== */
+
+.Root__main-view {
+  position: relative;
+}
+
+#lyrics-slot {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--lyrics-accent, #fff);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Hide Spotify's native lyrics only in the main view, where our slot takes
+   over. This avoids blanking any reused lyrics component outside the route. */
+.Root__main-view .lyrics-lyrics-container > * {
+  display: none !important;
+}
+
+/* Show the slot only for the main-view lyrics route. The scoped :has() keeps
+   the no-flash behavior without reacting to unrelated lyrics surfaces. */
+body:has(.Root__main-view .lyrics-lyrics-container) #lyrics-slot,
+body.on-lyrics-route #lyrics-slot {
+  display: flex;
+}
+
+/* ==================== Lyrics renderer ==================== */
+
+.lyrics-loading {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+}
+
+.lyrics-synced {
+  /* container-type: inline-size makes descendants' cqw units resolve
+     against this element's rendered width. Lyric-line font sizes are
+     specified in cqw below, so on panel resize the type scales smoothly
+     with the available width instead of being pinned to viewport or a
+     fixed px cap. Width is full-parent with a generous upper bound for
+     very wide displays; readability below the min-clamp is the only
+     reason to keep max-width at all. */
+  container-type: inline-size;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  height: 100%;
+  overflow-y: auto;
+  padding: 40vh 2rem;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  text-align: center;
+  /* Fade lines far from center — only ~5 lines sit prominently (2 past, 1
+     active, 2 upcoming); others dissolve into the background. */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.15) 25%,
+    rgba(0, 0, 0, 0.85) 40%,
+    black 48%,
+    black 52%,
+    rgba(0, 0, 0, 0.85) 60%,
+    rgba(0, 0, 0, 0.15) 75%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.15) 25%,
+    rgba(0, 0, 0, 0.85) 40%,
+    black 48%,
+    black 52%,
+    rgba(0, 0, 0, 0.85) 60%,
+    rgba(0, 0, 0, 0.15) 75%,
+    transparent 100%
+  );
+}
+.lyrics-synced::-webkit-scrollbar {
+  display: none;
+}
+
+.lyric-line {
+  /* cqw sizing: 3% of the lyrics container's inline width, clamped so
+     narrow sidebar widths don't go illegibly small and huge displays
+     don't cross into absurdly large. Active font below uses the same
+     scheme so both states rescale in proportion on panel resize. */
+  font-size: clamp(1.75rem, 3cqw, 3rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 0.8rem 0;
+  line-height: 1.2;
+  /* max-width in `ch` → the line wraps at the same character count
+     whether the font is base or active, because `ch` is relative to the
+     element's OWN font-size. That's the one CSS unit that lets two
+     different font sizes share an identical wrap point. Centered via
+     auto margins since text-align doesn't center block elements. */
+  max-width: 35ch;
+  margin-left: auto;
+  margin-right: auto;
+  transition:
+    color 250ms ease,
+    opacity 250ms ease,
+    font-size 250ms ease,
+    filter 250ms ease;
+  filter: blur(1px);
+}
+
+.lyric-line.past {
+  color: rgba(255, 255, 255, 0.35);
+  filter: blur(2px);
+}
+
+.lyrics-synced .lyric-line {
+  cursor: pointer;
+  border-radius: 8px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  transition:
+    color 250ms ease,
+    opacity 250ms ease,
+    font-size 250ms ease,
+    filter 250ms ease,
+    background-color 150ms ease;
+}
+
+.lyrics-synced .lyric-line:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  filter: blur(0);
+}
+
+.lyric-line.active {
+  filter: blur(0);
+  /* Active scales up with container width too (5cqw vs base 3cqw ≈ 1.67×),
+     bounded so narrow panels still get a visible-but-not-tiny emphasis
+     and wide panels don't balloon past typical reading limits. Lines long
+     enough to wrap at the active size also wrap at base since both sizes
+     are tied to the same container width — the "1 line at base, 2 at
+     active" mismatch doesn't happen in the sizes this clamp permits. */
+  font-size: clamp(2.5rem, 5cqw, 4.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--lyrics-accent, #fff);
+}
+
+.lyric-line.enhanced .lyric-word {
+  background-image: linear-gradient(
+    to right,
+    var(--lyrics-accent, #fff) var(--word-progress, -20%),
+    rgba(255, 255, 255, 0.35) calc(var(--word-progress, -20%) + 20%)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.lyric-bg {
+  display: inline;
+  font-size: 0.72em;
+  opacity: 0.78;
+  margin-left: 0.35em;
+}
+
+.lyrics-unsynced {
+  width: 100%;
+  max-width: 640px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 3rem 2rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  scrollbar-width: none;
+  text-align: center;
+}
+.lyrics-unsynced::-webkit-scrollbar {
+  display: none;
+}
+
+.lyric-line-plain {
+  padding: 0.2rem 0;
+}
+
+.lyrics-vinyl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.vinyl-disc {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  animation: vinyl-spin 20s linear infinite;
+  position: relative;
+}
+
+body.playback-paused .vinyl-disc {
+  animation-play-state: paused;
+}
+
+.vinyl-disc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.5) 0,
+    rgba(0, 0, 0, 0.5) 30px,
+    transparent 32px
+  );
+}
+
+@keyframes vinyl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vinyl-message {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+/* ==================== Command Palette ==================== */
+
+.command-palette {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 18vh;
+}
+
+.command-palette.hidden {
+  display: none;
+}
+
+.cmd-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cmd-modal {
+  position: relative;
+  width: 640px;
+  max-width: 90vw;
+  max-height: 60vh;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+#cmd-input {
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.05rem;
+  font-family: inherit;
+  outline: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#cmd-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.cmd-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.cmd-result {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.cmd-result:hover,
+.cmd-result.selected {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.cmd-result-art {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+}
+
+.cmd-result-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cmd-result-name {
+  color: #fff;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cmd-result-meta {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cmd-result-type {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+/* ==================== Custom right panel ==================== */
+
+/* Hide Spotify's native right-sidebar mount. Our custom panel is appended as a
+   sibling under .Root__right-sidebar, so hiding the aside cleanly removes the
+   whole built-in subtree without blanking unrelated wrappers elsewhere. */
+.Root__right-sidebar aside {
+  display: none !important;
+}
+
+.Root__right-sidebar {
+  min-width: 340px;
+}
+
+#custom-right-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  color: #fff;
+  padding: 1rem;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+/* --- Player half --- */
+
+.crp-player {
+  display: grid;
+  /* minmax(0, 1fr) on the cover row is load-bearing: without the explicit
+     0 min, grid falls back to min-content and the row grows to fit the
+     cover's intrinsic size, overflowing the panel. */
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto auto;
+  gap: 0.6rem;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-content: stretch;
+}
+
+.crp-context {
+  display: block;
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 0.25rem;
+}
+
+.crp-context:hover .crp-context-name {
+  text-decoration: underline;
+}
+
+.crp-context-label {
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+}
+
+.crp-context-name {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+/* Wrap fills the grid cell entirely and acts as a container-query size
+   context. The art inside uses 100cqmin (min of the wrap's width/height)
+   so it's always a perfect square equal to the smaller cell dimension —
+   no browser-dependent `aspect-ratio + max-height` re-derive needed. */
+.crp-cover-wrap {
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  place-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crp-cover {
+  width: 100cqmin;
+  height: 100cqmin;
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.crp-track-info {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.crp-track-text {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0 34px;
+  text-align: center;
+}
+
+.crp-btn.crp-like,
+.crp-btn.crp-miniplayer {
+  position: absolute;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  padding: 6px;
+  transform: translateY(-50%);
+}
+
+.crp-btn.crp-like {
+  right: 0;
+}
+
+.crp-btn.crp-miniplayer {
+  left: 0;
+}
+
+.crp-btn.crp-like.active {
+  color: var(--lyrics-accent, #1ed760);
+}
+
+/* Inline crp-link styling — inherit color, no default underline */
+a.crp-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.crp-link:hover {
+  text-decoration: underline;
+}
+
+.crp-track-name {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crp-track-artist {
+  display: block;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.15rem;
+}
+
+.crp-track-album {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.1rem;
+}
+
+.crp-seek {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+.crp-seek-bar,
+.crp-vol-bar {
+  position: relative;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  cursor: pointer;
+  /* Recessed "skeleton" track so the unfilled portion reads as a groove
+     the accent fill sits inside of, rather than a flat bar. Shared between
+     seek and volume sliders for visual consistency. */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.crp-seek-fill,
+.crp-vol-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--lyrics-accent, #fff);
+  border-radius: 2px;
+}
+
+.crp-vol-fill {
+  box-shadow: 0 0 8px rgba(var(--rgb-lyrics-accent, 255, 255, 255), 0.3);
+}
+
+.crp-seek-thumb,
+.crp-vol-thumb {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--lyrics-accent, #fff);
+  transform: translate(-50%, -50%);
+  left: 0;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+}
+
+.crp-seek-bar:hover .crp-seek-thumb,
+.crp-vol-bar:hover .crp-vol-thumb {
+  opacity: 1;
+}
+
+.crp-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.crp-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+.crp-btn svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.crp-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.crp-btn.active {
+  color: var(--lyrics-accent, #fff);
+}
+
+.crp-btn.crp-primary {
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  background: #fff;
+  color: #000;
+}
+
+.crp-btn.crp-primary:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.05);
+}
+
+.crp-volume {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 0.5rem;
+}
+
+.crp-vol-icon {
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+}
+
+.crp-vol-pct {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+  min-width: 2.8ch;
+  text-align: right;
+}
+
+/* --- Tabs half --- */
+
+.crp-tabs {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  min-height: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+}
+
+.crp-tab-bar {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.crp-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.crp-tab:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.crp-tab.active {
+  color: #000;
+  background: #fff;
+}
+
+.crp-tab-action {
+  display: none;
+  margin-left: auto;
+  align-self: center;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease;
+}
+
+.crp-tab-action svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+  flex: none;
+}
+
+.crp-tab-action:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Show the Clear queue pill only when the Queue tab is active AND the
+   user has added at least one track. :not([data-user-queued="0"])
+   matches both "1+" and an absent attribute, so we start the DOM with
+   data-user-queued="0" to keep it hidden until fetchQueue proves otherwise. */
+.crp-tab-bar[data-active="queue"]:not([data-user-queued="0"]) .crp-clear-queue {
+  display: inline-flex;
+}
+
+.crp-tab-content {
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.crp-tab-pane {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  display: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+.crp-tab-pane.active {
+  display: block;
+}
+
+/* Directional slide — only the incoming pane runs the animation, and
+   only one pane is in layout at a time (display: none/block), so this
+   is one subtree animating once per switch. Direction is applied in
+   JS: moving to a later tab slides in from the right, going back
+   slides in from the left. */
+.crp-tab-pane.active.crp-slide-right {
+  animation: crp-slide-right 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.crp-tab-pane.active.crp-slide-left {
+  animation: crp-slide-left 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes crp-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes crp-slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Let the browser skip offscreen rows. Each row is ~56px (avatar height
+   + padding); the intrinsic-size hint keeps scrollbar sizing stable. */
+.crp-list-row,
+.crp-queue-row,
+.crp-friend-row {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 56px;
+}
+
+.crp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.25rem;
+}
+
+.crp-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.85rem;
+}
+
+.crp-list-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+  min-width: 0;
+}
+
+.crp-list-row:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.crp-list-art {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+}
+
+.crp-list-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.crp-list-name {
+  display: block;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crp-list-sub {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.76rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crp-row-actions {
+  display: flex;
+  gap: 0.15rem;
+  opacity: 0;
+  transition: opacity 100ms ease;
+  flex-shrink: 0;
+}
+
+.crp-list-row:hover .crp-row-actions {
+  opacity: 1;
+}
+
+.crp-row-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+.crp-row-btn:hover:not(:disabled) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.crp-row-btn[data-action="remove"]:hover {
+  color: #ff6b6b;
+}
+
+/* ==================== Devices rows ==================== */
+
+/* Device row reuses .crp-list-row layout (flex + gap) but swaps the art
+   thumbnail for a type-glyph icon and adds an "active playback"
+   indicator dot on the right. */
+
+.crp-device-row {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 56px;
+}
+
+.crp-device-icon {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.crp-device-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.crp-device-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+
+.crp-device-active {
+  background: rgba(var(--rgb-lyrics-accent, 30, 215, 96), 0.12);
+}
+
+.crp-device-active .crp-device-icon {
+  color: var(--lyrics-accent, #1ed760);
+  background: rgba(var(--rgb-lyrics-accent, 30, 215, 96), 0.18);
+}
+
+.crp-device-active .crp-list-name {
+  color: var(--lyrics-accent, #1ed760);
+}
+
+.crp-device-active .crp-device-indicator {
+  background: var(--lyrics-accent, #1ed760);
+  box-shadow: 0 0 8px rgba(var(--rgb-lyrics-accent, 30, 215, 96), 0.6);
+}
+
+/* ==================== Friends rows ==================== */
+
+.crp-friend-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.5rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+  min-width: 0;
+}
+
+.crp-friend-row:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.crp-friend-avatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.crp-friend-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1db954;
+  box-shadow: 0 0 0 2px rgba(20, 20, 20, 0.95);
+}
+
+.crp-friend-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.crp-friend-name {
+  display: block;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crp-friend-track {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crp-friend-context {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Drag-and-drop reorder */
+
+.crp-drag-handle {
+  width: 14px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: grab;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 100ms ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.crp-queue-row:hover .crp-drag-handle {
+  opacity: 1;
+}
+
+.crp-queue-row {
+  cursor: pointer;
+}
+
+.crp-queue-row.crp-dragging {
+  opacity: 0.4;
+}
+
+.crp-queue-row.crp-drop-before {
+  box-shadow: inset 0 2px 0 var(--lyrics-accent, #fff);
+}
+
+.crp-queue-row.crp-drop-after {
+  box-shadow: inset 0 -2px 0 var(--lyrics-accent, #fff);
+}
+
+/* "Next up" separator between user-queued Play-next items and the
+   context's auto-up-next tail. Styled like Spotify's own — small,
+   quiet, uppercase. */
+.crp-queue-divider {
+  padding: 0.9rem 0.5rem 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Lyrics toggle (replaces Spotify's Friend Activity button in top bar) */
+[data-lyrics-btn="1"] svg {
+  color: currentColor;
+}
+
+[data-lyrics-btn="1"].lyrics-btn-active,
+[data-lyrics-btn="1"][aria-pressed="true"] {
+  color: var(--lyrics-accent, #1db954) !important;
+}
+
+/* ==================== Shortcut help modal ==================== */
+
+.shortcut-help {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shortcut-help.hidden {
+  display: none;
+}
+
+.shortcut-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.shortcut-modal {
+  position: relative;
+  width: 560px;
+  max-width: 90vw;
+  max-height: 80vh;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem 1.75rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+.shortcut-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.shortcut-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.shortcut-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+}
+
+.shortcut-keys {
+  color: var(--lyrics-accent, #fff);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.shortcut-desc {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.shortcut-hint {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+/* ==================== Toast ==================== */
+
+.shortcut-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2.5rem;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 10002;
+  padding: 0.55rem 1rem;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.shortcut-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==================== Scrollbars (owned surfaces hide) ==================== */
+
+.main-view-container__scroll-node,
+.main-view-container,
+.Root__nav-bar,
+.Root__right-sidebar,
+#lyrics-slot,
+.lyrics-synced,
+.lyrics-unsynced,
+.cmd-results,
+.shortcut-modal,
+.crp-tab-pane {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.main-view-container__scroll-node::-webkit-scrollbar,
+.main-view-container__scroll-node::-webkit-scrollbar-track,
+.main-view-container__scroll-node::-webkit-scrollbar-thumb,
+.main-view-container__scroll-node::-webkit-scrollbar-corner,
+.main-view-container::-webkit-scrollbar,
+.main-view-container::-webkit-scrollbar-track,
+.main-view-container::-webkit-scrollbar-thumb,
+.main-view-container::-webkit-scrollbar-corner,
+.Root__nav-bar::-webkit-scrollbar,
+.Root__nav-bar::-webkit-scrollbar-track,
+.Root__nav-bar::-webkit-scrollbar-thumb,
+.Root__nav-bar::-webkit-scrollbar-corner,
+.Root__right-sidebar::-webkit-scrollbar,
+.Root__right-sidebar::-webkit-scrollbar-track,
+.Root__right-sidebar::-webkit-scrollbar-thumb,
+.Root__right-sidebar::-webkit-scrollbar-corner,
+#lyrics-slot::-webkit-scrollbar,
+#lyrics-slot::-webkit-scrollbar-track,
+#lyrics-slot::-webkit-scrollbar-thumb,
+#lyrics-slot::-webkit-scrollbar-corner,
+.lyrics-synced::-webkit-scrollbar,
+.lyrics-synced::-webkit-scrollbar-track,
+.lyrics-synced::-webkit-scrollbar-thumb,
+.lyrics-synced::-webkit-scrollbar-corner,
+.lyrics-unsynced::-webkit-scrollbar,
+.lyrics-unsynced::-webkit-scrollbar-track,
+.lyrics-unsynced::-webkit-scrollbar-thumb,
+.lyrics-unsynced::-webkit-scrollbar-corner,
+.cmd-results::-webkit-scrollbar,
+.cmd-results::-webkit-scrollbar-track,
+.cmd-results::-webkit-scrollbar-thumb,
+.cmd-results::-webkit-scrollbar-corner,
+.shortcut-modal::-webkit-scrollbar,
+.shortcut-modal::-webkit-scrollbar-track,
+.shortcut-modal::-webkit-scrollbar-thumb,
+.shortcut-modal::-webkit-scrollbar-corner,
+.crp-tab-pane::-webkit-scrollbar,
+.crp-tab-pane::-webkit-scrollbar-track,
+.crp-tab-pane::-webkit-scrollbar-thumb,
+.crp-tab-pane::-webkit-scrollbar-corner {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* ==================== Right-panel context menu ==================== */
+.crp-ctxmenu {
+  position: fixed;
+  z-index: 9999;
+  min-width: 200px;
+  max-width: 320px;
+  padding: 4px;
+  background: transparent;
+  backdrop-filter: blur(32px) saturate(1.6);
+  -webkit-backdrop-filter: blur(32px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45),
+              0 6px 12px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  font-family: var(--font-family);
+  animation: crp-ctxmenu-in 80ms ease-out;
+}
+
+@keyframes crp-ctxmenu-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.crp-ctxmenu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: var(--spice-text, #fff);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: default;
+  border-radius: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crp-ctxmenu-item:hover,
+.crp-ctxmenu-item:focus {
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.crp-ctxmenu-danger {
+  color: var(--spice-notification-error, #f15e6c);
+}
+
+.crp-ctxmenu-sep {
+  height: 1px;
+  margin: 4px 8px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==================== Miniplayer (Document PiP) ==================== */
+
+/* The miniplayer renders into a separate Picture-in-Picture window that
+   inherits these styles via cloned <link>/<style> tags. The PIP body gets
+   `mp-pip-body` so we can anchor the full-viewport layout there without
+   competing with our main-window styles. */
+
+.mp-pip-body {
+  background: rgba(20, 20, 20, 0.92) !important;
+  color: #fff;
+  font-family: var(--font-family, "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#mini-player.mini-player {
+  /* Flex column, not grid, so the compact/panel pair can share space
+     evenly when both visible AND have compact fill 100% when the panel
+     is collapsed — grid-template-rows can't do both without a class flip.
+     container-type: size is how descendants (.mp-compact) decide whether
+     to stack art-above-content (portrait) or art-left-of-content
+     (landscape) based on the window's current aspect ratio. */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  container-type: size;
+  container-name: mini-player;
+}
+
+/* Close button — top-right corner of the PIP window. documentPictureInPicture
+   windows in Electron don't always render OS window chrome, so Spotify's own
+   miniplayer ships its own X too. */
+.mp-close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  width: 22px;
+  height: 22px;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.mp-close svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mp-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+/* Chevron toggle — bottom-right of the compact section (inside .mp-compact
+   so it sits at the bottom of the player panel, not the whole window). */
+.mp-toggle-panel {
+  position: absolute;
+  bottom: 0.4rem;
+  right: 0.4rem;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.mp-toggle-panel svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mp-toggle-panel:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+/* Compact — default layout is vertical (art on top, content stack below).
+   Orientation flips to horizontal via the @container rule further down
+   whenever the mini-player window's aspect is landscape-ish. The
+   expanded/collapsed classes do NOT drive this choice; they only toggle
+   the tabs panel's visibility. */
+.mp-compact {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  padding: 0.75rem 0.75rem 2rem;
+}
+
+/* The right-side stack: info / seek / controls. Lives below the art
+   when collapsed, to the right of it when expanded. */
+.mp-compact-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  justify-content: center;
+}
+
+/* LANDSCAPE window: flip compact to a row — art on the left, content on
+   the right. Column 1 is capped at 45% of compact width; the art wrap
+   fills that cell and its internal 100cqmin formula keeps it a perfect
+   square regardless of the resulting cell shape. Applies to both
+   expanded and collapsed panel states. */
+@container mini-player (min-aspect-ratio: 1 / 1) {
+  .mp-compact {
+    grid-template-rows: 1fr;
+    grid-template-columns: minmax(0, 45%) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+}
+
+/* Art wrap — size-container filling its grid cell. In collapsed the cell
+   is the `minmax(0, 1fr)` row; in expanded it's the `minmax(0, 45%)`
+   column. Either way 100cqmin inside gives a perfect square = smaller
+   cell dimension. */
+.mp-art-wrap {
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  place-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mp-art {
+  width: 100cqmin;
+  height: 100cqmin;
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.mp-info {
+  min-width: 0;
+  text-align: center;
+}
+
+.mp-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mp-artist {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.15rem;
+}
+
+.mp-seek {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+.mp-seek-bar {
+  position: relative;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.mp-seek-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--lyrics-accent, #fff);
+  border-radius: 2px;
+}
+
+.mp-seek-thumb {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lyrics-accent, #fff);
+  transform: translate(-50%, -50%);
+  left: 0;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+}
+
+.mp-seek-bar:hover .mp-seek-thumb {
+  opacity: 1;
+}
+
+.mp-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mp-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  width: 30px;
+  height: 30px;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+.mp-btn svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mp-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mp-btn.mp-primary {
+  width: 38px;
+  height: 38px;
+  padding: 10px;
+  background: #fff;
+  color: #000;
+}
+
+.mp-btn.mp-primary:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.05);
+}
+
+/* Lyrics / Queue panel — bottom half when expanded, hidden when collapsed.
+   flex:1 1 0 shares space 50/50 with compact; switching to display:none
+   hands all the space to compact. */
+.mp-panel {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mini-player.collapsed .mp-panel {
+  display: none;
+}
+
+.mp-tab-bar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+.mp-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.mp-tab:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.mp-tab.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.mp-tab-content {
+  position: relative;
+  min-height: 0;
+}
+
+.mp-tab-pane {
+  position: absolute;
+  inset: 0;
+  padding: 0.5rem 0.75rem 0.75rem;
+  overflow-y: auto;
+  display: none;
+  scrollbar-width: none;
+}
+
+.mp-tab-pane::-webkit-scrollbar {
+  display: none;
+}
+
+.mp-tab-pane.active {
+  display: block;
+}
+
+.mp-empty {
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+}
+
+.mp-lyrics-synced {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.mp-line {
+  padding: 0.25rem 0;
+  color: rgba(255, 255, 255, 0.5);
+  transition:
+    color 220ms ease,
+    font-weight 220ms ease;
+}
+
+.mp-line.past {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.mp-line.active {
+  color: #fff;
+  font-weight: 700;
+}
+
+.mp-lyrics-unsynced {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.mp-line-plain {
+  padding: 0.1rem 0;
+}
+
+.mp-queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mp-queue-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.35rem;
+  border-radius: 6px;
+}
+
+.mp-queue-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mp-queue-art {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05) center / cover no-repeat;
+}
+
+.mp-queue-info {
+  min-width: 0;
+}
+
+.mp-queue-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mp-queue-sub {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.1rem;
+}
