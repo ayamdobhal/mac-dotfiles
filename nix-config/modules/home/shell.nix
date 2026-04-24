@@ -9,6 +9,7 @@
       python = "python3";
       claude = "claude --dangerously-skip-permissions";
       nrs = "sudo darwin-rebuild switch --flake ~/.config/nix-config";
+      laude = "claude --dangerously-skip-permissions";
 
       # git aliases (oh-my-zsh git plugin)
       g = "git";
