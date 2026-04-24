@@ -30,7 +30,25 @@ return {
   -- Auto-close and auto-rename HTML/JSX tags
   {
     "windwp/nvim-ts-autotag",
-    event = "InsertEnter",
+    ft = {
+      "html",
+      "xml",
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "jsx",
+      "tsx",
+      "svelte",
+      "vue",
+      "astro",
+      "markdown",
+      "php",
+      "rescript",
+      "glimmer",
+      "handlebars",
+      "hbs",
+    },
     opts = {},
   },
 
