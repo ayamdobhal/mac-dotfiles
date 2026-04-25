@@ -11,6 +11,11 @@
   home.username = "ayamdobhal";
   home.homeDirectory = "/Users/ayamdobhal";
 
+  # Skip home-manager's man-page generation. It pulls in nixosOptionsDoc which
+  # emits a "builtins.derivation … options.json without proper context" warning
+  # on every rebuild. We don't read the HM man pages.
+  manual.manpages.enable = false;
+
   # NOTE: nvim/, ghostty/, sketchybar/, fastfetch/, ccstatusline/ configs
   # are NOT symlinked here because they already live in ~/.config/ (the dotfiles repo).
   # On a new machine, cloning the repo to ~/.config/ puts them in place automatically.
