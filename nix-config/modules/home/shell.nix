@@ -8,7 +8,6 @@
       lgt = "lazygit";
       python = "python3";
       claude = "claude --dangerously-skip-permissions";
-      nrs = "sudo darwin-rebuild switch --flake ~/.config/nix-config";
       laude = "claude --dangerously-skip-permissions";
 
       # git aliases (oh-my-zsh git plugin)
@@ -164,6 +163,19 @@
     initContent = ''
       # claude-code native install
       path=("$HOME/.local/bin" $path)
+
+      # nix-darwin rebuild — auto-detects host from LocalHostName, override with arg.
+      # `nrs` -> auto (work if hostname contains "work", else personal), `nrs work`/`nrs personal` -> explicit.
+      nrs() {
+        local host="$1"
+        if [ -z "$host" ]; then
+          case "$(scutil --get LocalHostName 2>/dev/null)" in
+            *work*) host=work ;;
+            *) host=personal ;;
+          esac
+        fi
+        sudo darwin-rebuild switch --flake "$HOME/.config/nix-config#$host"
+      }
 
       # oh-my-zsh git helper functions (used by dynamic aliases below)
       function git_current_branch() {

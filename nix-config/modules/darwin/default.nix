@@ -6,4 +6,6 @@
     ./skhd.nix
     ./sketchybar.nix
   ];
+
+  nixpkgs.overlays = [ (import ../../overlays) ];
 }

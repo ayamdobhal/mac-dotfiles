@@ -16,8 +16,8 @@
 
     # neovim / sketchybar deps
     tree-sitter
-    lua5_4
-    luarocks
+    lua5_5
+    lua5_5.pkgs.luarocks
     basedpyright
     rust-analyzer
     elixir-ls
@@ -26,5 +26,6 @@
 
     # fonts
     nerd-fonts.hack
+    sketchybar-app-font
   ];
 }
