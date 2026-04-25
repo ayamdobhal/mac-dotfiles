@@ -3,3 +3,10 @@ cabal
 raycast/extensions
 invideo
 nix-config/result
+
+# Home-manager managed paths — symlinks point into /nix/store, hash churns on every rebuild
+git/config
+direnv/lib/hm-nix-direnv.sh
+nvim/init.lua
+starship.toml
+**/*.backup
