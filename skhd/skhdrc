@@ -19,7 +19,7 @@ alt + shift - 0 : yabai -m window --space 10;
 # # stop/start/restart yabai
 # ctrl + alt - q : yabai --stop-service
 # ctrl + alt - s : yabai --start-service
-ctrl + shift - r : yabai --restart-service
+ctrl + shift - r : launchctl kickstart -k gui/$(id -u)/org.nixos.yabai
 # alt + shift - q : skhd -k "cmd - q "
 
 
@@ -73,11 +73,7 @@ cmd - tab :  yabai -m space --focus "$(yabai -m query --spaces --display | jq 's
 
 
 # create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
-ctrl + alt - n : yabai -m space --create && \
-                index="$(yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index')" && \
-                # yabai -m window --space "${index}" && \
-                yabai -m space --focus "${index}" && \
-                sketchybar -m --trigger space_change && hs -c "hs.alert.show('Window Moved To New Space')"
+ctrl + alt - n : yabai -m space --create && index="$(yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index')" && yabai -m space --focus "${index}" && sketchybar -m --trigger space_change && hs -c "hs.alert.show('Window Moved To New Space')"
 
 
 
