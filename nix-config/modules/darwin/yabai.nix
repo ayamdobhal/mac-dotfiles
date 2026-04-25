@@ -4,8 +4,7 @@
     package = pkgs.yabai;
     enableScriptingAddition = true;
     extraConfig = ''
-      sudo yabai --load-sa
-      yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+      # SA loading handled by org.nixos.yabai-sa LaunchDaemon (enableScriptingAddition above).
 
       yabai -m config layout bsp
       yabai -m config window_placement second_child
@@ -39,8 +38,10 @@
     '';
   };
 
-  # Patch yabai SA PAC ABI v1 -> v0 (yabai 7.1.17 + Sequoia bug)
-  # Runs as root during activation, before yabai service starts
+  # Patch yabai SA PAC ABI v1 -> v0 (yabai 7.1.17 + Sequoia/Tahoe bug),
+  # then reload the SA into Dock and kickstart sketchybar so its env reflects
+  # nix-config changes (nix-darwin doesn't auto-bump live launchd state for
+  # user agents whose plist content changed).
   system.activationScripts.postActivation.text = ''
     LOADER="/Library/ScriptingAdditions/yabai.osax/Contents/MacOS/loader"
     if [ -f "$LOADER" ]; then
@@ -48,6 +49,17 @@
       printf '\x80' | dd of="$LOADER" bs=1 seek=65547 count=1 conv=notrunc 2>/dev/null
       codesign -f -s - "$LOADER" 2>/dev/null
       echo "Patched yabai scripting addition PAC ABI"
+
+      /run/current-system/sw/bin/yabai --load-sa 2>/dev/null \
+        && echo "Reloaded yabai scripting addition into Dock"
+    fi
+
+    PRIMARY_UID=$(id -u ayamdobhal 2>/dev/null)
+    if [ -n "$PRIMARY_UID" ]; then
+      launchctl kickstart -k "gui/$PRIMARY_UID/org.nixos.sketchybar-custom" 2>/dev/null \
+        && echo "Kickstarted sketchybar"
+      launchctl kickstart -k "gui/$PRIMARY_UID/org.nixos.skhd" 2>/dev/null \
+        && echo "Kickstarted skhd"
     fi
   '';
 }
