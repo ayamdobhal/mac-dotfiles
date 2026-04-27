@@ -164,16 +164,10 @@
       # claude-code native install
       path=("$HOME/.local/bin" $path)
 
-      # nix-darwin rebuild — auto-detects host from LocalHostName, override with arg.
-      # `nrs` -> auto (work if hostname contains "work", else personal), `nrs work`/`nrs personal` -> explicit.
+      # nix-darwin rebuild — uses LocalHostName as the flake key, override with arg.
+      # `nrs` -> auto, `nrs <hostname>` -> explicit.
       nrs() {
-        local host="$1"
-        if [ -z "$host" ]; then
-          case "$(scutil --get LocalHostName 2>/dev/null)" in
-            *work*) host=work ;;
-            *) host=personal ;;
-          esac
-        fi
+        local host="''${1:-$(scutil --get LocalHostName 2>/dev/null)}"
         sudo darwin-rebuild switch --flake "$HOME/.config/nix-config#$host"
       }
 
