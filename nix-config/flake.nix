@@ -11,43 +11,43 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, nix-darwin, home-manager, ... }: {
-    darwinConfigurations."work" = nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [
-        ./hosts/work
-        ./modules/darwin
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.backupFileExtension = "backup";
-          home-manager.users.ayamdobhal = import ./modules/home;
-          home-manager.extraSpecialArgs = { };
-        }
-      ];
-    };
+  outputs = { nixpkgs, nix-darwin, home-manager, ... }:
+    let
+      lib = nixpkgs.lib;
 
-    darwinConfigurations."personal" = nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [
-        ./hosts/personal
-        ./modules/darwin
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.backupFileExtension = "backup";
-          home-manager.users.ayamdobhal = import ./modules/home;
-          home-manager.extraSpecialArgs = { };
-        }
-      ];
-    };
+      mkDarwin = hostname:
+        let
+          hostModule =
+            if lib.hasInfix "work" hostname
+            then ./hosts/work
+            else ./hosts/personal;
+        in
+        nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          modules = [
+            hostModule
+            ./modules/darwin
+            home-manager.darwinModules.home-manager
+            {
+              networking.hostName = hostname;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.ayamdobhal = import ./modules/home;
+              home-manager.extraSpecialArgs = { };
+            }
+          ];
+        };
+    in
+    {
+      darwinConfigurations = {
+        "ayam-magbog-work" = mkDarwin "ayam-magbog-work";
+      };
 
-    homeConfigurations."ayam@linux" = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [ ./modules/home ];
-      extraSpecialArgs = { };
+      homeConfigurations."ayam@linux" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./modules/home ];
+        extraSpecialArgs = { };
+      };
     };
-  };
 }
