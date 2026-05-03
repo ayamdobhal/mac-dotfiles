@@ -2,6 +2,7 @@
   imports = [
     ./system.nix
     ./hardware.nix
+    ./desktop.nix
     ./hyprland.nix
   ];
 
