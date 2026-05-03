@@ -38,10 +38,32 @@
             }
           ];
         };
+
+      mkNixos = hostname:
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/${hostname}
+            ./modules/nixos
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.ayamdobhal = import ./modules/home;
+              home-manager.extraSpecialArgs = { };
+            }
+          ];
+        };
     in
     {
       darwinConfigurations = {
         "ayam-magbog-work" = mkDarwin "ayam-magbog-work";
+        "ayam-magbog-personal" = mkDarwin "ayam-magbog-personal";
+      };
+
+      nixosConfigurations = {
+        thonkpad = mkNixos "thonkpad";
       };
 
       homeConfigurations."ayam@linux" = home-manager.lib.homeManagerConfiguration {
