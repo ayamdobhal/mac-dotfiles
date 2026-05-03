@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [
     ./packages.nix
     ./shell.nix
@@ -9,7 +9,10 @@
 
   home.stateVersion = "25.05";
   home.username = "ayamdobhal";
-  home.homeDirectory = "/Users/ayamdobhal";
+  home.homeDirectory =
+    if pkgs.stdenv.hostPlatform.isDarwin
+    then "/Users/ayamdobhal"
+    else "/home/ayamdobhal";
 
   # Skip home-manager's man-page generation. It pulls in nixosOptionsDoc which
   # emits a "builtins.derivation … options.json without proper context" warning

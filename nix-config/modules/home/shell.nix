@@ -164,11 +164,16 @@
       # claude-code native install
       path=("$HOME/.local/bin" $path)
 
-      # nix-darwin rebuild — uses LocalHostName as the flake key, override with arg.
-      # `nrs` -> auto, `nrs <hostname>` -> explicit.
+      # Rebuild helper. `nrs` -> auto-detect host, `nrs <hostname>` -> explicit.
+      # Mac: LocalHostName + darwin-rebuild. Linux: hostname + nixos-rebuild.
       nrs() {
-        local host="''${1:-$(scutil --get LocalHostName 2>/dev/null)}"
-        sudo darwin-rebuild switch --flake "$HOME/.config/nix-config#$host"
+        if [[ "$(uname)" == "Darwin" ]]; then
+          local host="''${1:-$(scutil --get LocalHostName 2>/dev/null)}"
+          sudo darwin-rebuild switch --flake "$HOME/.config/nix-config#$host"
+        else
+          local host="''${1:-$(hostname)}"
+          sudo nixos-rebuild switch --flake "$HOME/.config/nix-config#$host"
+        fi
       }
 
       # oh-my-zsh git helper functions (used by dynamic aliases below)
