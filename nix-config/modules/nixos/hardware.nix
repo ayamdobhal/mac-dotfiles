@@ -36,4 +36,7 @@
     HandleLidSwitch = "suspend";
     HandleLidSwitchExternalPower = "ignore";
   };
+
+  services.printing.enable = true;
+  services.gvfs.enable = true;
 }

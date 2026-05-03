@@ -19,5 +19,6 @@
     pavucontrol
     networkmanagerapplet
     kitty
+    hypridle
   ];
 }
