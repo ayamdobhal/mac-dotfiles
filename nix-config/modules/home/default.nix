@@ -5,6 +5,7 @@
     ./git.nix
     ./neovim.nix
     ./dev.nix
+    ./hyprland.nix
   ];
 
   home.stateVersion = "25.05";
