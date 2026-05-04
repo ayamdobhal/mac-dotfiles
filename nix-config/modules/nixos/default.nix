@@ -4,6 +4,7 @@
     ./hardware.nix
     ./desktop.nix
     ./hyprland.nix
+    ./wayland.nix
     ./apps.nix
   ];
 
