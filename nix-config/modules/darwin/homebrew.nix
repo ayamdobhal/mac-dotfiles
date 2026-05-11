@@ -19,6 +19,7 @@
       # dev tools
       "ghostty@tip"
       "claude"
+      "codex"
 
       # apps
       "bitwarden"
