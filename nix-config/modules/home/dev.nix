@@ -3,6 +3,5 @@
     nodejs_22
     pnpm
     python313
-    codex
   ];
 }
