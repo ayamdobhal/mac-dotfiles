@@ -7,8 +7,10 @@
     };
     taps = [
       "shaunsingh/sfmono-nerd-font-ligaturized"
+      "xmqywx/codeisland"
     ];
     brews = [
+      "codeisland"
       "spicetify-cli"
     ];
     casks = [
