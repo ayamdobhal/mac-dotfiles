@@ -10,7 +10,6 @@
       "xmqywx/codeisland"
     ];
     brews = [
-      "codeisland"
       "spicetify-cli"
     ];
     casks = [
@@ -25,6 +24,7 @@
 
       # apps
       "bitwarden"
+      "xmqywx/codeisland/codeisland"
       "discord"
       "spotify"
       "telegram"
