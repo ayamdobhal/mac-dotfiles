@@ -9,6 +9,7 @@
       python = "python3";
       claude = "claude --dangerously-skip-permissions";
       laude = "claude --dangerously-skip-permissions";
+      codex = "codex --dangerously-bypass-approvals-and-sandbox";
 
       # git aliases (oh-my-zsh git plugin)
       g = "git";
