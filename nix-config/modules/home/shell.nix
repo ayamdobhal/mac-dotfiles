@@ -9,6 +9,7 @@
       python = "python3";
       claude = "claude --dangerously-skip-permissions";
       laude = "claude --dangerously-skip-permissions";
+      codex = "codex --dangerously-bypass-approvals-and-sandbox";
 
       # git aliases (oh-my-zsh git plugin)
       g = "git";
@@ -242,7 +243,7 @@
       ln -sf "$TMPDIR/discord-ipc-0" /tmp/discord-ipc-0 2>/dev/null
 
       # Work navigation helper
-      z() { cd "$HOME/work/iv-pro/iv-pro-$1"; }
+      z() { cd "$HOME/work/iv-pro''${1:+/iv-pro-$1}"; }
     '';
   };
 
