@@ -8,9 +8,11 @@
     taps = [
       "shaunsingh/sfmono-nerd-font-ligaturized"
       "xmqywx/codeisland"
+      "codeptor/tap"
     ];
     brews = [
       "spicetify-cli"
+      "mausam"
     ];
     casks = [
       # browsers
