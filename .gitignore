@@ -2,6 +2,7 @@ dev-recap
 cabal
 raycast/extensions
 invideo
+obsidian-vault
 nix-config/result
 
 # Home-manager managed paths — symlinks point into /nix/store, hash churns on every rebuild
@@ -10,3 +11,52 @@ direnv/lib/hm-nix-direnv.sh
 starship.toml
 **/*.backup
 configstore/update-notifier-web-ext.json
+
+# Claude/Codex local state and secrets. Durable, sanitized config lives in
+# claude/ and codex/, but raw auth/session/cache files must not be committed.
+codex/config.toml
+codex/auth.json
+codex/.codex-global-state.json*
+codex/.personality_migration
+codex/.tmp/
+codex/ambient-suggestions/
+codex/cloud-*-cache.json
+codex/code-island-codex-install.json
+codex/history.jsonl
+codex/session_index.jsonl
+codex/installation_id
+codex/**/*sqlite*
+codex/cache/
+codex/models_cache.json
+codex/plugins/cache/
+codex/sessions/
+codex/shell_snapshots/
+codex/sqlite/
+codex/tmp/
+codex/vendor_imports/
+codex/version.json
+claude/.claude.json
+claude/*.log
+claude/.last-*
+claude/.update.lock
+claude/backups/
+claude/chrome/
+claude/debug/
+claude/downloads/
+claude/history.jsonl
+claude/projects/
+claude/sessions/
+claude/file-history/
+claude/ide/
+claude/session-env/
+claude/shell-snapshots/
+claude/tasks/
+claude/cache/
+claude/paste-cache/
+claude/plugins/cache/
+claude/plugins/data/
+claude/plugins/install-counts-cache.json
+claude/plugins/marketplaces/
+claude/plugins/repos/
+claude/stats-cache.json
+claude/mcp-needs-auth-cache.json

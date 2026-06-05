@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit Preferences"
+  short_description: "Local git commit staging and message preferences."
+  default_prompt: "Commit local changes following the user's staging and commit message preferences."

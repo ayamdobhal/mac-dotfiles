@@ -1,0 +1,249 @@
+{
+  "agentPushNotifEnabled" : true,
+  "effortLevel" : "high",
+  "enabledPlugins" : {
+    "chrome-devtools-mcp@claude-plugins-official" : true,
+    "clangd-lsp@claude-plugins-official" : true,
+    "rust-analyzer-lsp@claude-plugins-official" : true,
+    "typescript-lsp@claude-plugins-official" : true
+  },
+  "extraKnownMarketplaces" : {
+    "chrome-devtools-plugins" : {
+      "source" : {
+        "repo" : "ChromeDevTools\/chrome-devtools-mcp",
+        "source" : "github"
+      }
+    }
+  },
+  "hooks" : {
+    "Notification" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "PermissionRequest" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "timeout" : 86400,
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "PostToolUse" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "PreCompact" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "auto"
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "manual"
+      }
+    ],
+    "PreToolUse" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "SessionEnd" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "SessionStart" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "Stop" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "SubagentStop" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/codeisland-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions" : {
+    "allow" : [
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_navigate_back",
+      "mcp__playwright__browser_navigate_forward",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_hover",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_select_option",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_drag",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_file_upload",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_handle_dialog",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_tab_list",
+      "mcp__playwright__browser_tab_new",
+      "mcp__playwright__browser_tab_select",
+      "mcp__playwright__browser_tab_close",
+      "mcp__browsermcp__browser_navigate",
+      "mcp__browsermcp__browser_screenshot",
+      "mcp__browsermcp__browser_snapshot",
+      "mcp__browsermcp__browser_click",
+      "mcp__browsermcp__browser_type",
+      "mcp__browsermcp__browser_scroll",
+      "mcp__browsermcp__browser_back",
+      "mcp__browsermcp__browser_forward",
+      "mcp__browsermcp__browser_reload",
+      "mcp__browsermcp__browser_go_back",
+      "mcp__browsermcp__browser_go_forward",
+      "mcp__browsermcp__browser_hover",
+      "mcp__browsermcp__browser_select_option",
+      "mcp__browsermcp__browser_press_key",
+      "mcp__browsermcp__browser_wait",
+      "mcp__browsermcp__browser_get_console_logs",
+      "mcp__deep-wiki__read_wiki_contents",
+      "mcp__deep-wiki__ask_question",
+      "mcp__deep-wiki__read_wiki_structure",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:npmjs.com)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:bundlephobia.com)",
+      "WebFetch(domain:unpkg.com)",
+      "WebFetch(domain:jsdelivr.net)",
+      "Bash(curl:*)",
+      "Bash(cd:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(ln:*)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(find:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(awk:*)",
+      "Bash(sed:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(touch:*)",
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(rg:*)",
+      "Bash(run:*)",
+      "Bash(nix-env:*)",
+      "Bash(nix:*)",
+      "Bash(nix-shell:*)",
+      "Bash(direnv:*)",
+      "Bash(pnpm:*)",
+      "Bash(npx:*)",
+      "Bash(node:*)",
+      "Bash(cargo:*)",
+      "Bash(rustc:*)",
+      "Bash(clippy:*)",
+      "Bash(wasm-pack:*)",
+      "Bash(wasm-bindgen:*)",
+      "Bash(bacon:*)",
+      "Bash(cargo-watch:*)",
+      "Bash(concurrently:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(rust-analyzer:*)",
+      "Bash(vite:*)",
+      "Bash(vitest:*)",
+      "Bash(eslint:*)",
+      "Bash(prettier:*)",
+      "Bash(graphql-codegen:*)",
+      "Bash(hostname:*)",
+      "Bash(open:*)",
+      "Bash(bash:*)",
+      "mcp__figma__get_screenshot",
+      "Bash(npm run typecheck:*)",
+      "Bash(hack\/spec_metadata.sh)"
+    ],
+    "defaultMode" : "default",
+    "deny" : [
+      "Bash(rm:-rf)"
+    ]
+  },
+  "remoteControlAtStartup" : true,
+  "skipDangerousModePermissionPrompt" : true,
+  "statusLine" : {
+    "command" : "bunx -y ccstatusline@latest",
+    "padding" : 0,
+    "type" : "command"
+  },
+  "tui" : "fullscreen"
+}

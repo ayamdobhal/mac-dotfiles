@@ -1,0 +1,6 @@
+- Always use conventional commits for commit messages.
+- Do not include "codex" in pull request titles or branch names.
+- Do not add Codex or the assistant as a commit co-author.
+- Do not create draft pull requests; when the user asks to make a PR, create it as ready for review.
+- PR titles should also be in the conventional commit format.
+- Do not run frontend type checks unless explicitly requested; they are resource-intensive.

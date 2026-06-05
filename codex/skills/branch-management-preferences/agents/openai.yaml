@@ -1,0 +1,4 @@
+interface:
+  display_name: "Branch Preferences"
+  short_description: "Branch naming and creation workflow preferences."
+  default_prompt: "Create or switch to a git branch following the user's branching preferences."

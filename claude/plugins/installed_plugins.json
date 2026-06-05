@@ -1,0 +1,76 @@
+{
+  "version": 2,
+  "plugins": {
+    "code@invideo": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/ayamdobhal/work/iv-pro/iv-pro-copilot-v45",
+        "installPath": "/Users/ayamdobhal/.claude/plugins/cache/invideo/code/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-08T09:52:47.060Z",
+        "lastUpdated": "2026-01-08T09:52:47.060Z"
+      }
+    ],
+    "git@invideo": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/ayamdobhal/work/iv-pro/iv-pro-copilot-v45",
+        "installPath": "/Users/ayamdobhal/.claude/plugins/cache/invideo/git/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-08T09:52:47.070Z",
+        "lastUpdated": "2026-01-08T09:52:47.070Z"
+      }
+    ],
+    "typescript-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ayamdobhal/.claude/plugins/cache/claude-plugins-official/typescript-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-14T11:46:37.018Z",
+        "lastUpdated": "2026-01-14T11:46:37.018Z",
+        "gitCommitSha": "f70b65538da094ff474a855e7a679fb2c2c8064f"
+      }
+    ],
+    "clangd-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ayamdobhal/.claude/plugins/cache/claude-plugins-official/clangd-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-02-04T09:10:47.144Z",
+        "lastUpdated": "2026-02-04T09:10:47.144Z",
+        "gitCommitSha": "27d2b86d72da27c64585150857cee8472ad47abb"
+      }
+    ],
+    "rust-analyzer-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ayamdobhal/.claude/plugins/cache/claude-plugins-official/rust-analyzer-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-03-05T13:23:24.554Z",
+        "lastUpdated": "2026-03-05T13:23:24.554Z",
+        "gitCommitSha": "205b6e0b30366a969412d9aab7b99bea99d58db1"
+      }
+    ],
+    "chrome-devtools-mcp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ayamdobhal/.claude/plugins/cache/claude-plugins-official/chrome-devtools-mcp/1.1.1",
+        "version": "1.1.1",
+        "installedAt": "2026-04-09T10:00:56.624Z",
+        "lastUpdated": "2026-06-02T10:34:31.383Z",
+        "gitCommitSha": "c2d8009ff75f76bce1ec4cf79c2467b50d81725e"
+      }
+    ],
+    "codex@invideo": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/ayamdobhal/work/iv-pro/iv-pro-copilot-v45",
+        "installPath": "/Users/ayamdobhal/.claude/plugins/cache/invideo/codex/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-05-04T09:52:58.452Z",
+        "lastUpdated": "2026-05-04T09:52:58.452Z",
+        "gitCommitSha": "7685ed3f70ae94d031dda23a3d368721b21f8a15"
+      }
+    ]
+  }
+}

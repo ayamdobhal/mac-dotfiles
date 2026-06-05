@@ -1,0 +1,27 @@
+{
+  "invideo": {
+    "source": {
+      "source": "github",
+      "repo": "invideoio/cc"
+    },
+    "installLocation": "/Users/ayamdobhal/.claude/plugins/marketplaces/invideo",
+    "lastUpdated": "2026-06-05T09:51:20.781Z",
+    "autoUpdate": true
+  },
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "/Users/ayamdobhal/.claude/plugins/marketplaces/claude-plugins-official",
+    "lastUpdated": "2026-06-05T09:51:21.205Z"
+  },
+  "chrome-devtools-plugins": {
+    "source": {
+      "source": "github",
+      "repo": "ChromeDevTools/chrome-devtools-mcp"
+    },
+    "installLocation": "/Users/ayamdobhal/.claude/plugins/marketplaces/chrome-devtools-plugins",
+    "lastUpdated": "2026-04-09T10:00:42.923Z"
+  }
+}
