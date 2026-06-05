@@ -14,6 +14,10 @@
   # macOS-only packages
   environment.systemPackages = with pkgs; [
     switchaudio-osx
+    obsidian
+    prismlauncher
+    jdk21
+    optifine
   ];
 
   system.stateVersion = 6;

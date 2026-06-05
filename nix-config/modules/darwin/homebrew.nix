@@ -3,6 +3,7 @@
     enable = true;
     onActivation = {
       cleanup = "zap";
+      extraFlags = [ "--force-cleanup" ];
       autoUpdate = true;
     };
     taps = [

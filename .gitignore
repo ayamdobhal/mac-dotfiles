@@ -9,3 +9,4 @@ git/config
 direnv/lib/hm-nix-direnv.sh
 starship.toml
 **/*.backup
+configstore/update-notifier-web-ext.json
