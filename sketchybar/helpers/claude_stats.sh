@@ -31,10 +31,32 @@ CLAUDE_PRICING = {
 DEFAULT_CLAUDE_PRICING = CLAUDE_PRICING["claude-sonnet-4-5"]
 
 CODEX_PRICING = {
-    "gpt-5.5": {"input": 5.00, "cached_input": 0.50, "output": 30.00},
+    "gpt-5.5": {
+        "input": 5.00,
+        "cached_input": 0.50,
+        "output": 30.00,
+        "long_context_threshold": 272_000,
+        "long_context_input_multiplier": 2.0,
+        "long_context_output_multiplier": 1.5,
+    },
     "gpt-5.5-pro": {"input": 30.00, "cached_input": 30.00, "output": 180.00},
     "gpt-5.4-mini": {"input": 0.75, "cached_input": 0.075, "output": 4.50},
-    "gpt-5.4": {"input": 2.50, "cached_input": 0.25, "output": 15.00},
+    "gpt-5.4-pro": {
+        "input": 30.00,
+        "cached_input": 30.00,
+        "output": 180.00,
+        "long_context_threshold": 272_000,
+        "long_context_input_multiplier": 2.0,
+        "long_context_output_multiplier": 1.5,
+    },
+    "gpt-5.4": {
+        "input": 2.50,
+        "cached_input": 0.25,
+        "output": 15.00,
+        "long_context_threshold": 272_000,
+        "long_context_input_multiplier": 2.0,
+        "long_context_output_multiplier": 1.5,
+    },
     "gpt-5.2-codex": {"input": 1.75, "cached_input": 0.175, "output": 14.00},
     "gpt-5.2": {"input": 1.75, "cached_input": 0.175, "output": 14.00},
     "gpt-5.1-codex": {"input": 1.25, "cached_input": 0.125, "output": 10.00},
@@ -85,11 +107,21 @@ def codex_cost(usage: dict, model: str) -> float:
     input_tokens = usage.get("input_tokens") or 0
     cached_input_tokens = usage.get("cached_input_tokens") or 0
     billable_input_tokens = max(0, input_tokens - cached_input_tokens)
+    input_multiplier = 1.0
+    output_multiplier = 1.0
+    if codex_uses_long_context(usage, price):
+        input_multiplier = price.get("long_context_input_multiplier", 1.0)
+        output_multiplier = price.get("long_context_output_multiplier", 1.0)
     return (
-        billable_input_tokens * price["input"]
-        + cached_input_tokens * price["cached_input"]
-        + (usage.get("output_tokens") or 0) * price["output"]
+        billable_input_tokens * price["input"] * input_multiplier
+        + cached_input_tokens * price["cached_input"] * input_multiplier
+        + (usage.get("output_tokens") or 0) * price["output"] * output_multiplier
     ) / 1_000_000
+
+
+def codex_uses_long_context(usage: dict, price: dict[str, float]) -> bool:
+    threshold = price.get("long_context_threshold")
+    return threshold is not None and (usage.get("input_tokens") or 0) > threshold
 
 
 def reset_label(epoch: int | float | None) -> str:
@@ -179,6 +211,10 @@ def summarize_claude() -> dict[str, object]:
         + totals["cache_creation_input_tokens"]
         + totals["cache_read_input_tokens"]
     )
+    cached_input_tokens = (
+        totals["cache_creation_input_tokens"]
+        + totals["cache_read_input_tokens"]
+    )
     top_model = models.most_common(1)[0][0] if models else "n/a"
 
     return {
@@ -186,6 +222,8 @@ def summarize_claude() -> dict[str, object]:
         "claude_messages": messages,
         "claude_tool_calls": tool_calls,
         "claude_input_tokens": totals["input_tokens"],
+        "claude_cached_input_tokens": cached_input_tokens,
+        "claude_uncached_input_tokens": totals["input_tokens"],
         "claude_output_tokens": totals["output_tokens"],
         "claude_cache_write_tokens": totals["cache_creation_input_tokens"],
         "claude_cache_read_tokens": totals["cache_read_input_tokens"],
@@ -251,6 +289,11 @@ def summarize_codex() -> dict[str, object]:
                 models[model] += 1
                 sessions.add(session_id)
                 cost += codex_cost(usage, model)
+                price = model_price(CODEX_PRICING, model, DEFAULT_CODEX_PRICING)
+                if codex_uses_long_context(usage, price):
+                    totals["long_context_requests"] += 1
+                    totals["long_context_input_tokens"] += usage.get("input_tokens") or 0
+                    totals["long_context_output_tokens"] += usage.get("output_tokens") or 0
 
                 totals["input_tokens"] += usage.get("input_tokens") or 0
                 totals["cached_input_tokens"] += usage.get("cached_input_tokens") or 0
@@ -277,9 +320,15 @@ def summarize_codex() -> dict[str, object]:
         "codex_sessions": len(sessions),
         "codex_input_tokens": totals["input_tokens"],
         "codex_cached_input_tokens": totals["cached_input_tokens"],
+        "codex_uncached_input_tokens": max(
+            0, totals["input_tokens"] - totals["cached_input_tokens"]
+        ),
         "codex_output_tokens": totals["output_tokens"],
         "codex_reasoning_output_tokens": totals["reasoning_output_tokens"],
         "codex_total_tokens": totals["total_tokens"],
+        "codex_long_context_requests": totals["long_context_requests"],
+        "codex_long_context_input_tokens": totals["long_context_input_tokens"],
+        "codex_long_context_output_tokens": totals["long_context_output_tokens"],
         "codex_cost_usd": f"{cost:.2f}",
         "codex_model": top_model,
         "codex_plan": rate_limits.get("plan_type") or "n/a",
