@@ -5,6 +5,8 @@
     ./git.nix
     ./neovim.nix
     ./dev.nix
+    ./ai-tools.nix
+    ./obsidian.nix
     ./hyprland.nix
   ];
 
@@ -23,4 +25,8 @@
   # NOTE: nvim/, ghostty/, sketchybar/, fastfetch/, ccstatusline/ configs
   # are NOT symlinked here because they already live in ~/.config/ (the dotfiles repo).
   # On a new machine, cloning the repo to ~/.config/ puts them in place automatically.
+  # Claude/Codex configs live outside ~/.config, so ai-tools.nix links their
+  # durable non-secret files from this repo into ~/.claude and ~/.codex.
+  # obsidian.nix bootstraps the private Obsidian vault checkout and adds an
+  # ignored ~/.config/obsidian-vault symlink for convenient access from dotfiles.
 }
