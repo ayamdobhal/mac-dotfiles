@@ -106,6 +106,8 @@ local popup_claude_weekly_reset = add_row("  Resets in:", "??", {
     label_font = subrow_label,
 })
 local popup_claude_tokens = add_row("30d Tokens:", "??")
+local popup_claude_cached_input = add_row("Cached In:", "??")
+local popup_claude_uncached_input = add_row("Uncached In:", "??")
 local popup_claude_cost = add_row("30d Cost:", "??", { label_color = colors.green })
 local popup_claude_activity = add_row("30d Sessions:", "??")
 local popup_claude_model = add_row("Model:", "??", { label_color = colors.grey })
@@ -127,6 +129,8 @@ local popup_codex_weekly_reset = add_row("  Resets in:", "??", {
 })
 local popup_codex_credit_limit = add_row("Credit Limit:", "??", { label_color = colors.green })
 local popup_codex_tokens = add_row("30d Tokens:", "??")
+local popup_codex_cached_input = add_row("Cached In:", "??")
+local popup_codex_uncached_input = add_row("Uncached In:", "??")
 local popup_codex_cost = add_row("30d Cost:", "??", { label_color = colors.green })
 local popup_codex_activity = add_row("30d Sessions:", "??")
 local popup_codex_model = add_row("Model/Plan:", "??", { label_color = colors.grey })
@@ -204,6 +208,17 @@ end
 
 local function format_usd(value)
     return "$" .. string.format("%.2f", tonumber(value) or 0)
+end
+
+local function token_share_label(value, total)
+    local n = tonumber(value) or 0
+    local d = tonumber(total) or 0
+    if d <= 0 then return "n/a" end
+    local pct = n * 100 / d
+    local pct_format = (pct > 0 and pct < 1) or (pct > 99 and pct < 100)
+        and "%.2f%%"
+        or "%.1f%%"
+    return string.format("%s (" .. pct_format .. ")", compact_number(n), pct)
 end
 
 local function percent_label(value, fallback)
@@ -302,7 +317,20 @@ end
 local function update_stats_popup(stats)
     if not stats then return end
 
+    local claude_input_total = (tonumber(stats.claude_input_tokens) or 0)
+        + (tonumber(stats.claude_cached_input_tokens) or 0)
+
     set_label(popup_claude_tokens, compact_number(stats.claude_total_tokens))
+    set_label(
+        popup_claude_cached_input,
+        token_share_label(stats.claude_cached_input_tokens, claude_input_total),
+        colors.grey
+    )
+    set_label(
+        popup_claude_uncached_input,
+        compact_number(stats.claude_uncached_input_tokens),
+        colors.grey
+    )
     set_label(popup_claude_cost, format_usd(stats.claude_cost_usd), colors.green)
     set_label(popup_claude_activity, compact_number(stats.claude_sessions))
     set_label(popup_claude_model, stats.claude_model or "n/a", colors.grey)
@@ -319,6 +347,16 @@ local function update_stats_popup(stats)
     set_label(popup_codex_weekly_reset, reset_label(stats.codex_secondary_reset), colors.grey)
     set_label(popup_codex_credit_limit, stats.codex_credit_status or "n/a", colors.green)
     set_label(popup_codex_tokens, compact_number(stats.codex_total_tokens))
+    set_label(
+        popup_codex_cached_input,
+        token_share_label(stats.codex_cached_input_tokens, stats.codex_input_tokens),
+        colors.grey
+    )
+    set_label(
+        popup_codex_uncached_input,
+        compact_number(stats.codex_uncached_input_tokens),
+        colors.grey
+    )
     set_label(popup_codex_cost, format_usd(stats.codex_cost_usd), colors.green)
     set_label(popup_codex_activity, compact_number(stats.codex_sessions))
     set_label(popup_codex_model, (stats.codex_model or "n/a") .. " / " .. (stats.codex_plan or "n/a"), colors.grey)
