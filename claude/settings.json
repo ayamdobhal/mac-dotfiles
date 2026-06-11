@@ -1,5 +1,6 @@
 {
   "agentPushNotifEnabled" : true,
+  "cleanupPeriodDays" : 365,
   "effortLevel" : "high",
   "enabledPlugins" : {
     "chrome-devtools-mcp@claude-plugins-official" : true,
