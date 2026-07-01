@@ -24,6 +24,7 @@
       "ghostty@tip"
       "claude"
       "codex"
+      "codex-app"
 
       # apps
       "bitwarden"
