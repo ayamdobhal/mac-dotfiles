@@ -5,6 +5,10 @@
     enableScriptingAddition = true;
     extraConfig = ''
       # SA loading handled by org.nixos.yabai-sa LaunchDaemon (enableScriptingAddition above).
+      # Reload the SA whenever Dock restarts (relogin/crash/macOS bouncing it) so
+      # space create/destroy keeps working without a full darwin-rebuild. Needs the
+      # passwordless sudoers entry below. Stable wrapper path survives yabai bumps.
+      yabai -m signal --add event=dock_did_restart action="sudo /run/current-system/sw/bin/yabai --load-sa"
 
       yabai -m config layout bsp
       yabai -m config window_placement second_child
@@ -36,6 +40,17 @@
       # external bar (sketchybar)
       yabai -m config external_bar all:30:0
     '';
+  };
+
+  # Passwordless sudo for reloading the SA into Dock. Referenced by the
+  # dock_did_restart signal above. No sha256 digest: the wrapper path is stable
+  # but its store target changes on every yabai bump, which would stale a pinned
+  # digest and silently reintroduce the password prompt.
+  environment.etc."sudoers.d/yabai" = {
+    text = ''
+      ayamdobhal ALL = (root) NOPASSWD: /run/current-system/sw/bin/yabai --load-sa
+    '';
+    mode = "0440";
   };
 
   # Patch yabai SA PAC ABI v1 -> v0 (yabai 7.1.17 + Sequoia/Tahoe bug),
