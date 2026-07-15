@@ -46,12 +46,11 @@
   # dock_did_restart signal above. No sha256 digest: the wrapper path is stable
   # but its store target changes on every yabai bump, which would stale a pinned
   # digest and silently reintroduce the password prompt.
-  environment.etc."sudoers.d/yabai" = {
-    text = ''
-      ayamdobhal ALL = (root) NOPASSWD: /run/current-system/sw/bin/yabai --load-sa
-    '';
-    mode = "0440";
-  };
+  # nix-darwin environment.etc has no `mode`; the store symlink lands at 0444,
+  # which sudo accepts (it only rejects group/world-writable sudoers files).
+  environment.etc."sudoers.d/yabai".text = ''
+    ayamdobhal ALL = (root) NOPASSWD: /run/current-system/sw/bin/yabai --load-sa
+  '';
 
   # Patch yabai SA PAC ABI v1 -> v0 (yabai 7.1.17 + Sequoia/Tahoe bug),
   # then reload the SA into Dock and kickstart sketchybar so its env reflects
