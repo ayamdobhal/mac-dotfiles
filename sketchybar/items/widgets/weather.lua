@@ -1,8 +1,6 @@
 local colors = require("colors")
 local icons = require("icons")
 local settings = require("settings")
-local loc = require("utils.loc")
-local tbl = require("utils.tbl")
 
 local weather = sbar.add("item", "widgets.weather", {
     position = "right",
@@ -251,35 +249,33 @@ local function geocode_and_fetch(loc_name)
     end)
 end
 
-weather:subscribe({"routine", "forced", "system_woke"}, function ()
-    if settings.weather.use_shortcut then
-        sbar.exec("ipconfig getifaddr en0", function (wifi)
-            if wifi ~= "" then
-                sbar.exec("shortcuts run \"Get Location\" | tee", function (location)
-                    local loc_name = ""
-                    local loc_tbl = tbl.from_string(location)
-                    if loc_tbl and #loc_tbl > 0 then
-                        loc_name = loc_tbl[1]
-                    end
-                    if loc_name ~= "" then
-                        geocode_and_fetch(loc_name)
-                    elseif settings.weather.location then
-                        geocode_and_fetch(settings.weather.location)
-                    else
-                        geocode_and_fetch("Mumbai")
-                    end
-                end)
-            elseif settings.weather.location then
-                geocode_and_fetch(settings.weather.location)
-            else
-                geocode_and_fetch("Mumbai")
-            end
-        end)
-    elseif settings.weather.location then
+-- Fallback when the live location API is unavailable
+local function fetch_fallback()
+    if settings.weather.location then
         geocode_and_fetch(settings.weather.location)
     else
         geocode_and_fetch("Mumbai")
     end
+end
+
+weather:subscribe({"routine", "forced", "system_woke"}, function ()
+    local url = settings.weather.location_url
+    if not url then
+        fetch_fallback()
+        return
+    end
+    sbar.exec("curl -s --max-time 10 '" .. url .. "'", function(result)
+        local location = type(result) == "table" and result.location or nil
+        if location and location.lat and location.lng then
+            local display = location.label or location.city or "Unknown"
+            if location.city and location.country then
+                display = location.city .. ", " .. location.country
+            end
+            fetch_open_meteo(location.lat, location.lng, display)
+        else
+            fetch_fallback()
+        end
+    end)
   end)
 
 weather:subscribe("mouse.clicked", function()

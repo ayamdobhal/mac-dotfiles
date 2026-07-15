@@ -31,7 +31,7 @@ local function load_config()
         python_command = "python",
         weather = {
             location = "Mumbai",
-            use_shortcut = true
+            location_url = "https://live.iamdobhal.dev/api/live/public"
         }
     }
 
