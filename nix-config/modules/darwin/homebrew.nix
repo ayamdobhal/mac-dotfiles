@@ -13,7 +13,7 @@
     ];
     brews = [
       "spicetify-cli"
-      "mausam"
+      "codeptor/tap/mausam"
     ];
     casks = [
       # browsers
