@@ -1,6 +1,5 @@
 { ... }: {
   home.file = {
-    ".codex/hooks.json".source = ../../../codex/hooks.json;
     ".codex/memories/user_preferences.md".source =
       ../../../codex/memories/user_preferences.md;
     ".codex/rules/default.rules".source = ../../../codex/rules/default.rules;
@@ -18,11 +17,6 @@
       source = ../../../claude/statusline-command.sh;
       executable = true;
     };
-    ".claude/hooks/codeisland-state.py" = {
-      source = ../../../claude/hooks/codeisland-state.py;
-      executable = true;
-    };
-
     ".claude/plugins/blocklist.json".source =
       ../../../claude/plugins/blocklist.json;
     ".claude/plugins/config.json".source = ../../../claude/plugins/config.json;
