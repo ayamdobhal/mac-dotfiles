@@ -20,7 +20,6 @@
     };
     taps = [
       "shaunsingh/sfmono-nerd-font-ligaturized"
-      "xmqywx/codeisland"
       "codeptor/tap"
     ];
     brews = [
@@ -40,7 +39,6 @@
 
       # apps
       "bitwarden"
-      "xmqywx/codeisland/codeisland"
       "discord"
       "spotify"
       "telegram"
