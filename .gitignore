@@ -4,6 +4,7 @@ raycast/extensions
 invideo
 obsidian-vault
 nix-config/result
+/result
 
 # Home-manager managed paths — symlinks point into /nix/store, hash churns on every rebuild
 git/config
