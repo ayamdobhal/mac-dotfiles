@@ -1,5 +1,7 @@
 dev-recap
 cabal
+# gh state — pkgs.gh installs the tool; config/auth stay local
+gh/
 raycast/extensions
 invideo
 obsidian-vault
@@ -37,6 +39,7 @@ codex/tmp/
 codex/vendor_imports/
 codex/version.json
 claude/.claude.json
+claude/plugins/blocklist.json
 claude/*.log
 claude/.last-*
 claude/.update.lock
