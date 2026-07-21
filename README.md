@@ -5,7 +5,7 @@ Reproducible macOS (and Linux) system config managed with **Nix** — nix-darwin
 One command to set up a new machine:
 
 ```bash
-darwin-rebuild switch --flake ~/.config/nix-config#work
+darwin-rebuild switch --flake ~/.config/nix-config#ayam-magbog-work
 ```
 
 ![sketchybar](sketchybar/demo.png)
@@ -59,5 +59,5 @@ nix-config/
 
 1. Install [Determinate Nix](https://install.determinate.systems/nix)
 2. Clone this repo to `~/.config`
-3. Run `darwin-rebuild switch --flake ~/.config/nix-config#work` (or `#personal`)
+3. Run `darwin-rebuild switch --flake ~/.config/nix-config#ayam-magbog-work` (or `#ayam-magbog-personal`)
 4. Partially disable SIP for yabai scripting addition ([guide](https://github.com/koekeishiya/yabai/wiki/Disabling-System-Integrity-Protection))
