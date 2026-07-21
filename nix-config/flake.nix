@@ -29,7 +29,10 @@
             ./modules/darwin
             home-manager.darwinModules.home-manager
             {
-              networking.hostName = hostname;
+              # HostName must be fully qualified for Erlang long names (iex --name)
+              networking.hostName = "${hostname}.local";
+              networking.localHostName = hostname;
+              networking.computerName = hostname;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
