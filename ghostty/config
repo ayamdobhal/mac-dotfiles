@@ -6,7 +6,9 @@ working-directory = home
 scrollback-limit = 10000000
 confirm-close-surface = false
 auto-update = download
-auto-update-channel = tip
+# Pinned to stable until ghostty-org/ghostty#13324 (background-opacity not
+# applied to new windows with hidden titlebar) is fixed; flip back to tip after.
+auto-update-channel = stable
 
 # -------------------------
 # Font

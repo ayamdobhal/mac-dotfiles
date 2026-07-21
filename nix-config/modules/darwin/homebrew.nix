@@ -32,7 +32,10 @@
       "zen"
 
       # dev tools
-      "ghostty@tip"
+      # ghostty pinned to stable: tip has a regression where background-opacity
+      # is not applied to new windows with macos-titlebar-style = hidden
+      # (ghostty-org/ghostty#13324). Move back to ghostty@tip once fixed.
+      "ghostty"
       "claude"
       "codex"
       "codex-app"
