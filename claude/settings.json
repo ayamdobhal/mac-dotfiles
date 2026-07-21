@@ -2,6 +2,7 @@
   "agentPushNotifEnabled" : true,
   "cleanupPeriodDays" : 365,
   "effortLevel" : "high",
+  "model" : "fable",
   "enabledPlugins" : {
     "chrome-devtools-mcp@claude-plugins-official" : true,
     "clangd-lsp@claude-plugins-official" : true,
