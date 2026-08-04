@@ -20,11 +20,9 @@
     };
     taps = [
       "shaunsingh/sfmono-nerd-font-ligaturized"
-      "codeptor/tap"
     ];
     brews = [
       "spicetify-cli"
-      "codeptor/tap/mausam"
     ];
     casks = [
       # browsers
