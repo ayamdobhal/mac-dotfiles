@@ -98,13 +98,26 @@ local function parse_vm_stat(output)
     stats.wired = tonumber(output:match("Pages wired down:%s+(%d+)")) * page_size
     stats.compressed = tonumber(output:match("Pages occupied by compressor:%s+(%d+)")) * page_size
     stats.purgeable = tonumber(output:match("Pages purgeable:%s+(%d+)")) * page_size
+    stats.anonymous = tonumber(output:match("Anonymous pages:%s+(%d+)")) * page_size
     return stats
 end
 
+-- Memory used the way Activity Monitor reports it:
+-- app memory (anonymous - purgeable) + wired + compressed
+local function used_bytes(stats)
+    return stats.anonymous - stats.purgeable + stats.wired + stats.compressed
+end
+
+local total_mem = 0
+sbar.exec("sysctl -n hw.memsize", function(result)
+    total_mem = tonumber(result) or 0
+end)
+
 ram:subscribe({ "routine", "forced", "system_woke" }, function(env)
-    sbar.exec("memory_pressure", function(output)
-        local percentage = output:match("System%-wide memory free percentage: (%d+)")
-        local load = 100 - tonumber(percentage)
+    if total_mem == 0 then return end
+    sbar.exec("vm_stat", function(output)
+        local stats = parse_vm_stat(output)
+        local load = math.floor(used_bytes(stats) / total_mem * 100 + 0.5)
         ram:push({ load / 100. })
         local color = colors.blue
         if load > 30 then
@@ -134,8 +147,8 @@ ram:subscribe("mouse.clicked", function(env)
 
             sbar.exec("vm_stat", function(vm_output)
                 local stats = parse_vm_stat(vm_output)
-                local used = stats.wired + stats.active + stats.compressed
-                local free = stats.free + stats.inactive + stats.purgeable
+                local used = used_bytes(stats)
+                local free = total - used
 
                 ram_used:set({ label = format_bytes(used) })
                 ram_free:set({ label = format_bytes(free) })
