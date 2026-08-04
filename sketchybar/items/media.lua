@@ -303,6 +303,8 @@ local is_playing = false
 local current_art_small = ""
 local current_art_large = ""
 local popup_is_open = false
+local paused_since = nil
+local PAUSE_CLEAR_SECS = 60
 
 -- ── Hover Animation ───────────────────────────────────────────────
 local interrupt = 0
@@ -378,110 +380,15 @@ local function set_album_art(small_url, large_url)
   end
 end
 
-local function show_last_played(track, artist, album, art_small, art_large)
-  is_playing = false
-  set_album_art(art_small, art_large)
-
-  media_artist:set({ label = { string = artist, color = colors.with_alpha(colors.white, 0.35) } })
-  media_title:set({ label = { string = track, color = colors.with_alpha(colors.white, 0.5) } })
-
-  popup_track:set({ label = track })
-  popup_artist:set({ label = artist })
-  popup_album:set({ label = album })
-  popup_controls:set({ icon = { string = controls_string(icons.media.play) } })
-  media_cover:set({ icon = { color = colors.grey } })
-end
-
-local function build_recently_played_cmd(token)
-  return "curl -s --max-time 10 -w '\\nHTTP_STATUS:%{http_code}'"
-    .. " -H 'Authorization: Bearer " .. token .. "'"
-    .. " 'https://api.spotify.com/v1/me/player/recently-played?limit=1'"
-    .. " | " .. "python3" .. [[ -c "
-import sys, json
-raw = sys.stdin.read()
-status_line = [l for l in raw.split('\n') if l.startswith('HTTP_STATUS:')]
-http_status = int(status_line[0].split(':')[1]) if status_line else 0
-if http_status == 401:
-    print('UNAUTHORIZED')
-    sys.exit(0)
-if http_status != 200:
-    print('IDLE')
-    sys.exit(0)
-body = '\n'.join(l for l in raw.split('\n') if not l.startswith('HTTP_STATUS:'))
-try:
-    d = json.loads(body)
-    items = d.get('items', [])
-    if not items:
-        print('IDLE')
-        sys.exit(0)
-    item = items[0].get('track', {})
-    album = item.get('album') or {}
-    images = album.get('images') or []
-    images.sort(key=lambda x: x.get('height', 0), reverse=True)
-    art_large = ''
-    art_small = ''
-    for img in images:
-        h = img.get('height', 0)
-        url = img.get('url', '')
-        if h >= 300 and not art_large:
-            art_large = url
-        if h >= 64 and h <= 300 and not art_small:
-            art_small = url
-    if not art_large and images:
-        art_large = images[0].get('url', '')
-    if not art_small:
-        art_small = art_large
-    artists = ', '.join(a.get('name', '') for a in (item.get('artists') or []))
-    print(item.get('name', ''))
-    print(artists)
-    print(album.get('name', ''))
-    print(art_small)
-    print(art_large)
-except Exception:
-    print('IDLE')
-"]]
-end
-
-local function fetch_recently_played()
-  get_token(function(token)
-    if not token then return end
-    sbar.exec(build_recently_played_cmd(token), function(result)
-      if type(result) ~= "string" then return end
-      local trimmed = result:gsub("%s+$", "")
-      if trimmed == "UNAUTHORIZED" then
-        invalidate_token(function(new_token)
-          if not new_token then return end
-          sbar.exec(build_recently_played_cmd(new_token), function(retry_result)
-            if type(retry_result) ~= "string" then return end
-            local rt = retry_result:gsub("%s+$", "")
-            if rt == "IDLE" or rt == "" or rt == "UNAUTHORIZED" then return end
-            local lines = {}
-            for line in retry_result:gmatch("[^\r\n]+") do
-              table.insert(lines, line)
-            end
-            if #lines >= 3 then
-              show_last_played(lines[1], lines[2], lines[3], lines[4] or "", lines[5] or "")
-            end
-          end)
-        end)
-        return
-      end
-      if trimmed == "IDLE" or trimmed == "" then return end
-      local lines = {}
-      for line in result:gmatch("[^\r\n]+") do
-        table.insert(lines, line)
-      end
-      if #lines >= 3 then
-        show_last_played(lines[1], lines[2], lines[3], lines[4] or "", lines[5] or "")
-      end
-    end)
-  end)
-end
+local idle_shown = false
 
 local function show_idle()
+  if idle_shown then return end
+  idle_shown = true
   current_art_small = ""
   current_art_large = ""
   is_playing = false
+  last_track = ""
   media_cover:set({
     icon = { drawing = true, color = colors.grey },
     background = { image = { string = "" }, color = colors.bg2, drawing = true },
@@ -496,8 +403,6 @@ local function show_idle()
   popup_artist:set({ label = "" })
   popup_album:set({ label = "" })
   popup_controls:set({ icon = { string = controls_string(icons.media.play) } })
-
-  fetch_recently_played()
 end
 
 -- ── Playback Controls ─────────────────────────────────────────────
@@ -603,6 +508,19 @@ local function handle_playback_result(result)
     return
   end
 
+  -- Clear the widget instead of lingering on a stale track once playback
+  -- has been paused for a while
+  if playing then
+    paused_since = nil
+  else
+    if not paused_since then paused_since = os.time() end
+    if os.time() - paused_since >= PAUSE_CLEAR_SECS then
+      show_idle()
+      return
+    end
+  end
+
+  idle_shown = false
   is_playing = playing
   set_album_art(art_small, art_large)
 
