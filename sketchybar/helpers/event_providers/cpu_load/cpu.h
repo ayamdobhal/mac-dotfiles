@@ -33,6 +33,10 @@ static inline void cpu_init(struct cpu* cpu) {
   cpu->prev_core_load = NULL;
   cpu->core_load = NULL;
   cpu->num_cores = 0;
+  cpu->user_load = 0;
+  cpu->sys_load = 0;
+  cpu->total_load = 0;
+  for (int i = 0; i < MAX_CORES; i++) cpu->core_total_load[i] = 0;
 }
 
 static inline void cpu_update(struct cpu* cpu) {
@@ -51,17 +55,22 @@ static inline void cpu_update(struct cpu* cpu) {
     uint32_t delta_user = cpu->load.cpu_ticks[CPU_STATE_USER]
                           - cpu->prev_load.cpu_ticks[CPU_STATE_USER];
 
+    uint32_t delta_nice = cpu->load.cpu_ticks[CPU_STATE_NICE]
+                          - cpu->prev_load.cpu_ticks[CPU_STATE_NICE];
+
     uint32_t delta_system = cpu->load.cpu_ticks[CPU_STATE_SYSTEM]
                             - cpu->prev_load.cpu_ticks[CPU_STATE_SYSTEM];
 
     uint32_t delta_idle = cpu->load.cpu_ticks[CPU_STATE_IDLE]
                           - cpu->prev_load.cpu_ticks[CPU_STATE_IDLE];
 
-    uint32_t total = delta_system + delta_user + delta_idle;
+    uint32_t total = delta_system + delta_user + delta_nice + delta_idle;
     if (total > 0) {
-      cpu->user_load = (double)delta_user / (double)total * 100.0;
-      cpu->sys_load = (double)delta_system / (double)total * 100.0;
-      cpu->total_load = cpu->user_load + cpu->sys_load;
+      cpu->user_load = (int)((double)(delta_user + delta_nice)
+                             / (double)total * 100.0 + 0.5);
+      cpu->sys_load = (int)((double)delta_system / (double)total * 100.0 + 0.5);
+      cpu->total_load = (int)((double)(delta_user + delta_nice + delta_system)
+                              / (double)total * 100.0 + 0.5);
     }
   }
 
@@ -95,14 +104,16 @@ static inline void cpu_update(struct cpu* cpu) {
     for (natural_t i = 0; i < num_cores && i < MAX_CORES; i++) {
       uint32_t du = cpu->core_load[i].cpu_ticks[CPU_STATE_USER]
                     - cpu->prev_core_load[i].cpu_ticks[CPU_STATE_USER];
+      uint32_t dn = cpu->core_load[i].cpu_ticks[CPU_STATE_NICE]
+                    - cpu->prev_core_load[i].cpu_ticks[CPU_STATE_NICE];
       uint32_t ds = cpu->core_load[i].cpu_ticks[CPU_STATE_SYSTEM]
                     - cpu->prev_core_load[i].cpu_ticks[CPU_STATE_SYSTEM];
       uint32_t di = cpu->core_load[i].cpu_ticks[CPU_STATE_IDLE]
                     - cpu->prev_core_load[i].cpu_ticks[CPU_STATE_IDLE];
 
-      uint32_t total = du + ds + di;
+      uint32_t total = du + dn + ds + di;
       cpu->core_total_load[i] = total > 0
-                                ? (int)((double)(du + ds) / (double)total * 100.0)
+                                ? (int)((double)(du + dn + ds) / (double)total * 100.0 + 0.5)
                                 : 0;
     }
   }
