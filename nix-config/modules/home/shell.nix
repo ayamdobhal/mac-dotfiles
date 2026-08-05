@@ -243,6 +243,13 @@
       ln -sf "$TMPDIR/discord-ipc-0" /tmp/discord-ipc-0 2>/dev/null
 
       # Work navigation helper
+      z() {
+        if [ -z "$1" ]; then
+          cd "$base"
+        else
+          cd "$base/$1"
+        fi
+      }
     '';
   };
 
