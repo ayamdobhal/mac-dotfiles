@@ -5,6 +5,13 @@
 - only commit when explicitly told to, let me test first
 - always use conventional commits and follow the same format for branch names - feat/*, chore/*, etc.
 
+## Services & logs (MANDATORY, repos under ~/work/invideo)
+- Long-running processes start ONLY via `svc up <name>` — never bare dev-server commands, never backgrounded shell calls. A server whose logs aren't in `.logs/` is invisible.
+- Registered services: `api` (iv-pro-api, base 4000), `v45` (iv-pro-copilot-v45, base 4100), `web` (iv-pro-web, base 3000). Cross-service ports are wired automatically per task.
+- Inspect: `svc ls [--task]` · `svc logs <name>` · `svc stop|restart <name>` · `svc doctor`.
+- Ports: base + 10 × task-index; `svc up <name> --main` claims the canonical port — only for the task the human is actively browser-testing.
+- Task worktrees: `svc task new <slug> <repo>…` creates `~/work/invideo/wt/<slug>/<repo>` per repo, copies `.env*`, runs `direnv allow`, assigns the port index. `svc tasks` is the fleet view.
+
 ## Slack user IDs
 - Jawad Shaikh: U02SUK8STNV (jawad.shaikh@invideo.io)
 - Danish: U05V7J932UE (danish@invideo.io)
