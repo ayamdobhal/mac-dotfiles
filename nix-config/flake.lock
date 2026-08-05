@@ -60,7 +60,28 @@
       "inputs": {
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "sanrio-colorscripts": "sanrio-colorscripts"
+      }
+    },
+    "sanrio-colorscripts": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785924556,
+        "narHash": "sha256-K4AyH9wglk+08tpgXt1FGg9WQU3T4ducoeK4kbht2o8=",
+        "owner": "ayamdobhal",
+        "repo": "sanrio-colorscripts",
+        "rev": "32037a8b6f752c2222c06923b1a0cd431f7da336",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ayamdobhal",
+        "repo": "sanrio-colorscripts",
+        "type": "github"
       }
     }
   },
