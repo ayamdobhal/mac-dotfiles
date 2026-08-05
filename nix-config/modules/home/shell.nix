@@ -1,4 +1,6 @@
-{ pkgs, ... }: {
+{ pkgs, sanrio-colorscripts, ... }: {
+  home.packages = [ sanrio-colorscripts.packages.${pkgs.system}.default ];
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
@@ -162,6 +164,15 @@
     };
 
     initContent = ''
+      # a sanrio friend on every new shell
+      sanrio-colorscripts -r
+
+      # random sanrio logo for fastfetch (CLI flags override config.jsonc,
+      # and any explicit --logo-* args passed by the caller override these)
+      fastfetch() {
+        command fastfetch --logo-type data-raw --logo "$(sanrio-colorscripts -r --no-title)" "$@"
+      }
+
       # claude-code native install
       path=("$HOME/.local/bin" $path)
 

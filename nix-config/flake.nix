@@ -9,9 +9,12 @@
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    sanrio-colorscripts.url = "github:ayamdobhal/sanrio-colorscripts";
+    sanrio-colorscripts.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, nix-darwin, home-manager, ... }:
+  outputs = { nixpkgs, nix-darwin, home-manager, sanrio-colorscripts, ... }:
     let
       lib = nixpkgs.lib;
 
@@ -37,7 +40,7 @@
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               home-manager.users.ayamdobhal = import ./modules/home;
-              home-manager.extraSpecialArgs = { };
+              home-manager.extraSpecialArgs = { inherit sanrio-colorscripts; };
             }
           ];
         };
@@ -54,7 +57,7 @@
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               home-manager.users.ayamdobhal = import ./modules/home;
-              home-manager.extraSpecialArgs = { };
+              home-manager.extraSpecialArgs = { inherit sanrio-colorscripts; };
             }
           ];
         };
@@ -72,7 +75,7 @@
       homeConfigurations."ayam@linux" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [ ./modules/home ];
-        extraSpecialArgs = { };
+        extraSpecialArgs = { inherit sanrio-colorscripts; };
       };
     };
 }
