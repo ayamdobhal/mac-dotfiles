@@ -243,7 +243,16 @@
       ln -sf "$TMPDIR/discord-ipc-0" /tmp/discord-ipc-0 2>/dev/null
 
       # Work navigation helper
-      z() { cd "$HOME/work/iv-pro''${1:+/iv-pro-$1}"; }
+      z() {
+        local base="$HOME/work/invideo"
+        if [ -z "$1" ]; then
+          cd "$base"
+        elif [ -d "$base/iv-pro-$1" ]; then
+          cd "$base/iv-pro-$1"
+        else
+          cd "$base/$1"
+        fi
+      }
     '';
   };
 
