@@ -13,6 +13,7 @@
     fastfetch
     awscli2
     bun
+    ngrok
 
     # neovim / sketchybar deps
     tree-sitter
