@@ -253,6 +253,36 @@
       # Discord IPC
       ln -sf "$TMPDIR/discord-ipc-0" /tmp/discord-ipc-0 2>/dev/null
 
+      # Toggle the always-on caffeinate agent (AC-only sleep prevention,
+      # Vanta-safe since no pmset/lock settings change). `off` lasts until
+      # the next rebuild or login.
+      if [[ "$(uname)" == "Darwin" ]]; then
+        caff() {
+          local uid plist
+          uid=$(id -u)
+          plist="$HOME/Library/LaunchAgents/org.nixos.caffeinate.plist"
+          case "''${1:-status}" in
+            on)
+              launchctl bootstrap "gui/$uid" "$plist" 2>/dev/null
+              echo "caffeinate: on"
+              ;;
+            off)
+              launchctl bootout "gui/$uid/org.nixos.caffeinate" 2>/dev/null
+              echo "caffeinate: off (until next rebuild/login)"
+              ;;
+            status|*)
+              if pmset -g assertions | grep -q "caffeinate.*PreventSystemSleep\|PreventSystemSleep.*caffeinate"; then
+                echo "caffeinate: on (system + display sleep blocked while on AC; screen won't auto-lock)"
+              elif launchctl print "gui/$uid/org.nixos.caffeinate" &>/dev/null; then
+                echo "caffeinate: agent loaded, no active assertion (on battery?)"
+              else
+                echo "caffeinate: off"
+              fi
+              ;;
+          esac
+        }
+      fi
+
       # Work navigation helper
       z() {
         local base="$HOME/work/invideo"
