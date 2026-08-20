@@ -14,6 +14,7 @@
     awscli2
     bun
     ngrok
+    yt-dlp
 
     # neovim / sketchybar deps
     tree-sitter
