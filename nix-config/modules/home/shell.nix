@@ -1,5 +1,5 @@
 { pkgs, sanrio-colorscripts, ... }: {
-  home.packages = [ sanrio-colorscripts.packages.${pkgs.system}.default ];
+  home.packages = [ sanrio-colorscripts.packages.${pkgs.stdenv.hostPlatform.system}.default ];
 
   programs.zsh = {
     enable = true;
