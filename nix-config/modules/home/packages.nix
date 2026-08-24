@@ -15,6 +15,7 @@
     bun
     ngrok
     yt-dlp
+    ffmpeg
 
     # neovim / sketchybar deps
     tree-sitter
