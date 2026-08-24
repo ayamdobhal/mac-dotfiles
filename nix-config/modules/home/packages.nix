@@ -24,7 +24,7 @@
     basedpyright
     rust-analyzer
     elixir-ls
-    elixir
+    beamPackages.elixir
     vtsls
 
     # fonts
