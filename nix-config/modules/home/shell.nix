@@ -1,6 +1,11 @@
 { pkgs, sanrio-colorscripts, ... }: {
   home.packages = [ sanrio-colorscripts.packages.${pkgs.stdenv.hostPlatform.system}.default ];
 
+  # Homebrew casks that ship CLIs (e.g. codex) live here; nix-darwin's
+  # homebrew module installs them but does not touch PATH. Appended so nix
+  # binaries win over brew when both are present.
+  home.sessionPath = [ "/opt/homebrew/bin" ];
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
