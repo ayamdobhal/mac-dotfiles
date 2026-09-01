@@ -18,6 +18,9 @@
       laude = "claude --dangerously-skip-permissions";
       codex = "codex --dangerously-bypass-approvals-and-sandbox";
 
+      # invideo internal CLI (github.com/invideoio/iv); runs via nix, no install
+      iv = "nix run git+ssh://git@github.com/invideoio/iv --";
+
       # git aliases (oh-my-zsh git plugin)
       g = "git";
       ga = "git add";
