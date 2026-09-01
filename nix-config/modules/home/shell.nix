@@ -18,6 +18,7 @@
       laude = "claude --dangerously-skip-permissions";
       codex = "codex --dangerously-bypass-approvals-and-sandbox";
 
+
       # git aliases (oh-my-zsh git plugin)
       g = "git";
       ga = "git add";
