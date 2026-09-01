@@ -41,6 +41,7 @@
       # apps
       "bitwarden"
       "discord"
+      "figma"
       "spotify"
       "telegram"
       "whatsapp"
