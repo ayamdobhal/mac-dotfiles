@@ -52,6 +52,9 @@ Scope {
                 isFocused: workspace.is_focused === true,
                 isUrgent: workspace.is_urgent === true
             };
+        }).sort(function (a, b) {
+            // IPC workspace snapshots have no guaranteed array ordering.
+            return a.output.localeCompare(b.output) || a.idx - b.idx;
         });
         var focused = workspaces.find(function (workspace) {
             return workspace.isFocused;
