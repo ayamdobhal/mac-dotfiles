@@ -1,6 +1,6 @@
 # ThinkPad configuration
 
-The `thonkpad` output manages the existing NixOS host `nixos`, user `ayam`, and its Niri/NERV desktop. `nixos` is an alias for the same output. Both NixOS and Home Manager state versions remain 26.05. The checked-in hardware file is specific to this ThinkPad; do not apply it to another machine.
+The `thonkpad` output manages the NixOS host `thonkpad`, user `ayam`, and its Niri/NERV desktop. `nixos` is an alias for the same output. Both NixOS and Home Manager state versions remain 26.05. The checked-in hardware file is specific to this ThinkPad; do not apply it to another machine.
 
 The Mac outputs retain their existing nixpkgs/Home Manager pins. Linux uses separately pinned `linux-*` inputs. Only the portable package core and existing dev/Neovim modules are shared. Mac system modules, Homebrew packages and AI configuration are not imported on Linux.
 
