@@ -6,14 +6,16 @@ The Mac outputs retain their existing nixpkgs/Home Manager pins. Linux uses sepa
 
 ## Build and apply
 
-Clone into `~/projects/mac-dotfiles`, not on top of `~/.config`. Run these commands from the repository root. The explicit root + `dir` syntax includes shared dotfiles outside `nix-config/`, including newly added unstaged files during development.
+The ThinkPad checkout lives directly at `~/.config`. Run `nrs` to detect the hostname and rebuild, or `nrs thonkpad` to select it explicitly. The old `~/projects/mac-dotfiles` path is a compatibility symlink to `~/.config`.
+
+Use Git-backed flake references, which include tracked source files and exclude unrelated application state in this directory. Stage newly added source files before checking them. Do not use `path:~/.config`: that would include untracked application state in the Nix store.
 
 ```sh
-nix flake check 'path:.?dir=nix-config' --no-write-lock-file
-nix build 'path:.?dir=nix-config#nixosConfigurations.thonkpad.config.system.build.toplevel' --no-link
-sudo nixos-rebuild test --flake 'path:.?dir=nix-config#thonkpad'
-# After checking the temporary result:
-sudo nixos-rebuild switch --flake 'path:.?dir=nix-config#thonkpad'
+cd ~/.config
+nix flake check ./nix-config --no-write-lock-file
+nix build ./nix-config#nixosConfigurations.thonkpad.config.system.build.toplevel --no-link
+sudo nixos-rebuild test --flake ./nix-config#thonkpad
+nrs
 ```
 
 Keep the prior system generation and source backup before activation. A test activation changes the running system and Home Manager, but does not make it the boot default. Roll back a test using the recorded previous system's `bin/switch-to-configuration test`; after a persistent switch, use `sudo nixos-rebuild switch --rollback` or select the previous boot generation. Do not garbage-collect the recovery generation while testing.
@@ -26,7 +28,7 @@ Ghostty + Zsh + Starship are the terminal/shell defaults. Alacritty, Fish, VS Co
 
 Firefox, Discord, Neovim, Nemo, Loupe, Codex and Claude Code remain/install alongside the approved CLI/development tools. GCC is included for the shared Neovim Treesitter parser installer. AWS CLI, ngrok, yt-dlp, ffmpeg, Chrome, Telegram, Spotify, Bitwarden, Steam, Proton VPN, Tailscale and Spicetify are not selected for the Linux profile. An application dependency may still include a library or tool from that list in the Nix store; package removal does not delete old generations.
 
-Zsh keeps the portable Mac Git aliases, prompt and completion setup. It does not inherit Homebrew paths, launchctl/caffeinate functions or Mac Discord socket handling. Neovim and fastfetch are explicitly linked from this repository; Neovim seeds a writable plugin lockfile under its state directory when the config is read-only; Linux Ghostty config adapts the Mac visual settings and uses Super in place of Command.
+Zsh keeps the portable Mac Git aliases, prompt and completion setup. It does not inherit Homebrew paths, launchctl/caffeinate functions or Mac Discord socket handling. Neovim, fastfetch and Ghostty use their native tracked files in this checkout. Home Manager owns the remaining generated settings. The shared Ghostty configuration validates on Linux; Command bindings map to Super, and Mac-only settings are ignored by Ghostty on Linux. Neovim retains its read-only-config fallback for other installation layouts.
 
 ## Shortcuts
 

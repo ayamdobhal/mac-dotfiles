@@ -121,7 +121,7 @@ let
         { "label": "BROWSER", "detail": "FIREFOX / NEW COLUMN", "kind": "RECENT", "command": ["${pkgs.firefox}/bin/firefox"] },
         { "label": "FILES", "detail": "NEMO / NEW COLUMN", "kind": "RECENT", "command": ["${pkgs.nemo}/bin/nemo"] },
         { "label": "CODE", "detail": "NEOVIM / NEW COLUMN", "kind": "APPLICATION", "command": ["${pkgs.ghostty}/bin/ghostty", "-e", "${pkgs.neovim}/bin/nvim"] },
-        { "label": "NIX REPOSITORY", "detail": "DOTFILES / NEOVIM", "kind": "SETTING", "command": ["${pkgs.ghostty}/bin/ghostty", "--working-directory=/home/ayam/projects/mac-dotfiles", "-e", "${pkgs.neovim}/bin/nvim", "/home/ayam/projects/mac-dotfiles/nix-config/flake.nix"] },
+        { "label": "NIX REPOSITORY", "detail": "DOTFILES / NEOVIM", "kind": "SETTING", "command": ["${pkgs.ghostty}/bin/ghostty", "--working-directory=/home/ayam/.config", "-e", "${pkgs.neovim}/bin/nvim", "/home/ayam/.config/nix-config/flake.nix"] },
         { "label": "RELOAD NIRI CONFIG", "detail": "DECLARATIVE CONFIG RE-READ", "kind": "COMMAND", "command": ["${pkgs.niri}/bin/niri", "msg", "action", "load-config-file"] },
         { "label": "RELOAD WALLPAPER", "detail": "INVALIDATE LOCAL IMAGE CACHE", "kind": "COMMAND", "command": ["${pkgs.quickshell}/bin/qs", "--config", "nerv", "ipc", "call", "nerv", "reloadWallpaper"] }
       ]
