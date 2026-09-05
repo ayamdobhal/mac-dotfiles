@@ -40,7 +40,7 @@
     [projects."/home/ayam/nix"]
     trust_level = "trusted"
 
-    [projects."/home/ayam/projects/mac-dotfiles"]
+    [projects."/home/ayam/.config"]
     trust_level = "trusted"
   '';
   home.file.".codex/skills/playwright".source = "${inputs.codex-skills}/skills/.curated/playwright";

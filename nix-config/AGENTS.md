@@ -8,11 +8,11 @@ Do not change system.stateVersion or home.stateVersion during routine work.
 Start graphical-session applications through app2unit in the Niri config.
 Keep app2unit installed and preserve the Quickshell graphical-session unit.
 
-Run checks from the repository root, including the dir query so sibling assets
-are visible in the flake source:
+Run checks from the repository root, using the Git flake so only tracked files enter the source
+(the checkout can contain private application state under ~/.config):
 
-    nix flake check 'path:.?dir=nix-config' --no-write-lock-file
-    nix build 'path:.?dir=nix-config#nixosConfigurations.thonkpad.config.system.build.toplevel' --no-link
+    nix flake check ./nix-config --no-write-lock-file
+    nix build ./nix-config#nixosConfigurations.thonkpad.config.system.build.toplevel --no-link
 
 Validate on Linux before activation. Record the current system generation and
 retain the existing source as a rollback baseline. Test before switching.

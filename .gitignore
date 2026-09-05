@@ -68,3 +68,24 @@ claude/mcp-needs-auth-cache.json
 # Local Python verification state
 __pycache__/
 *.pyc
+
+# Linux application/runtime state next to the tracked dotfiles
+/Code/
+/dconf/
+/environment.d/
+/fontconfig/
+/fuzzel/
+/gtk-3.0/
+/gtk-4.0/
+/mako/
+/mimeapps.list
+/mozilla/
+/nemo/
+/niri/
+/procps/
+/pulse/
+/quickshell/
+/systemd/
+/discord/
+/ibus/
+/gtk-2.0/

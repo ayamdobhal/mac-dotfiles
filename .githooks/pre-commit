@@ -5,6 +5,6 @@ files=()
 while IFS= read -r -d '' file; do files+=("$file"); done < <(git diff --cached --name-only --diff-filter=ACM -z -- '*.nix')
 if [ "${#files[@]}" -gt 0 ]; then
   system=$(nix eval --impure --raw --expr builtins.currentSystem)
-  nix run "path:.?dir=nix-config#formatter.$system" -- --check "${files[@]}"
+  nix run "git+file://$PWD?dir=nix-config#formatter.$system" -- --check "${files[@]}"
 fi
-nix flake check 'path:.?dir=nix-config' --no-write-lock-file
+nix flake check "git+file://$PWD?dir=nix-config" --no-write-lock-file

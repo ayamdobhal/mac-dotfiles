@@ -11,6 +11,4 @@
     noto-fonts-color-emoji
     liberation_ttf
   ];
-  xdg.configFile."nvim".source = ../../../../nvim;
-  xdg.configFile."fastfetch".source = ../../../../fastfetch;
 }
