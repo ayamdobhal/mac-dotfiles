@@ -7,15 +7,12 @@
     ./dev.nix
     ./ai-tools.nix
     ./obsidian.nix
-    ./hyprland.nix
   ];
 
   home.stateVersion = "25.05";
   home.username = "ayamdobhal";
   home.homeDirectory =
-    if pkgs.stdenv.hostPlatform.isDarwin
-    then "/Users/ayamdobhal"
-    else "/home/ayamdobhal";
+    if pkgs.stdenv.hostPlatform.isDarwin then "/Users/ayamdobhal" else "/home/ayamdobhal";
 
   # Skip home-manager's man-page generation. It pulls in nixosOptionsDoc which
   # emits a "builtins.derivation … options.json without proper context" warning

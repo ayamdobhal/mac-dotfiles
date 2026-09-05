@@ -2,11 +2,13 @@
 
 Reproducible macOS (and Linux) system config managed with **Nix** — nix-darwin + home-manager + flakes.
 
-One command to set up a new machine:
+For a Mac:
 
 ```bash
 darwin-rebuild switch --flake ~/.config/nix-config#ayam-magbog-work
 ```
+
+For the ThinkPad (Niri + NERV, Ghostty + Zsh + Starship), see [the Linux setup and shortcut guide](nix-config/docs/thinkpad/README.md).
 
 ![sketchybar](sketchybar/demo.png)
 
