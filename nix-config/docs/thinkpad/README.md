@@ -26,7 +26,7 @@ Ghostty + Zsh + Starship are the terminal/shell defaults. Alacritty, Fish, VS Co
 
 Firefox, Discord, Neovim, Nemo, Loupe, Codex and Claude Code remain/install alongside the approved CLI/development tools. GCC is included for the shared Neovim Treesitter parser installer. AWS CLI, ngrok, yt-dlp, ffmpeg, Chrome, Telegram, Spotify, Bitwarden, Steam, Proton VPN, Tailscale and Spicetify are not selected for the Linux profile. An application dependency may still include a library or tool from that list in the Nix store; package removal does not delete old generations.
 
-Zsh keeps the portable Mac Git aliases, prompt and completion setup. It does not inherit Homebrew paths, launchctl/caffeinate functions or Mac Discord socket handling. Neovim and fastfetch are explicitly linked from this repository; Linux Ghostty config adapts the Mac visual settings and uses Super in place of Command.
+Zsh keeps the portable Mac Git aliases, prompt and completion setup. It does not inherit Homebrew paths, launchctl/caffeinate functions or Mac Discord socket handling. Neovim and fastfetch are explicitly linked from this repository; Neovim seeds a writable plugin lockfile under its state directory when the config is read-only; Linux Ghostty config adapts the Mac visual settings and uses Super in place of Command.
 
 ## Shortcuts
 

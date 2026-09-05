@@ -18,7 +18,21 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Load all plugin specs from lua/plugins/
-require("lazy").setup({ import = "plugins" })
+-- Home Manager may link the config into the read-only Nix store. Keep a
+-- writable lockfile in state in that case, seeded from the repository pin.
+local lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json"
+if vim.fn.filewritable(lockfile) ~= 1 then
+  local state = vim.fn.stdpath("state")
+  vim.fn.mkdir(state, "p")
+  local writable_lockfile = state .. "/lazy-lock.json"
+  if not vim.uv.fs_stat(writable_lockfile) then
+    assert(vim.uv.fs_copyfile(lockfile, writable_lockfile))
+  end
+  -- fs_copyfile preserves the store file's read-only mode.
+  assert(vim.uv.fs_chmod(writable_lockfile, 384)) -- 0600
+  lockfile = writable_lockfile
+end
+require("lazy").setup({ import = "plugins" }, { lockfile = lockfile })
 
 -- LSP servers (after plugins so blink.cmp is available)
 require("config.lsp")
