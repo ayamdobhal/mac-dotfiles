@@ -7,10 +7,7 @@
     yt-dlp
     ffmpeg
 
-    # neovim / sketchybar deps
-
     # fonts
     nerd-fonts.hack
-    sketchybar-app-font
   ];
 }
