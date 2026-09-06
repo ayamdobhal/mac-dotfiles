@@ -1,0 +1,69 @@
+# SketchyBar migration with native SwiftUI usage widget.
+theme = "dark"
+preset = "flat-dark"
+yabai.path = "/run/current-system/sw/bin/yabai"
+
+[appearance]
+accent-color = "system"
+roundness = 22
+fill-opacity = 0.7
+border-width = 0.0
+glow-opacity = 0.0
+shadow-opacity = 0.0
+neon-color = "#76cce0"
+
+[experimental.foreground]
+# A 50pt container centers the built-in 38pt capsules with 6pt top/bottom air.
+height = 50
+formation = "pills"
+margin = 8
+gap = 10
+
+[experimental.background]
+displayed = false
+
+[widgets]
+displayed = [
+    "default.spaces",
+    "default.activeapp",
+    "spacer",
+    "default.nowplaying",
+    "native.ai-usage",
+    "default.systemmonitor",
+    "default.network",
+    "default.volume",
+    "default.battery",
+    "default.weather",
+    "divider",
+    "default.time",
+]
+
+[widgets.default.spaces]
+space.show-key = true
+window.show-title = false
+
+[widgets.default.battery]
+show-percentage = true
+warning-level = 20
+critical-level = 10
+
+[widgets.default.volume]
+show-percentage = false
+scroll-step = 3
+
+[widgets.default.network]
+show-speed = true
+
+[widgets.default.time]
+format = "EEE MMM d  H:mm:ss"
+calendar.format = "H:mm"
+calendar.show-events = false
+
+[widgets.default.weather]
+provider = "open-meteo"
+use-ip-fallback = true
+
+[widgets.native.ai-usage]
+refresh-seconds = 300
+claude-api = true
+python = "/usr/bin/python3"

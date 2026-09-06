@@ -73,7 +73,7 @@ cmd - tab :  yabai -m space --focus "$(yabai -m query --spaces --display | jq 's
 
 
 # create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
-ctrl + alt - n : yabai -m space --create && index="$(yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index')" && yabai -m space --focus "${index}" && sketchybar -m --trigger space_change && hs -c "hs.alert.show('Window Moved To New Space')"
+ctrl + alt - n : yabai -m space --create && index="$(yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index')" && yabai -m space --focus "${index}" && hs -c "hs.alert.show('Window Moved To New Space')"
 
 
 
@@ -89,4 +89,4 @@ alt - 9 : yabai -m space --focus 9
 alt - 0 : yabai -m space --focus 10
 
 # destroy desktop
-ctrl + alt - k : yabai -m space --destroy && yabai -m window --focus recent && sketchybar -m --trigger space_change && hs -c "hs.alert.show('Space Destroyed')"
+ctrl + alt - k : yabai -m space --destroy && yabai -m window --focus recent && hs -c "hs.alert.show('Space Destroyed')"

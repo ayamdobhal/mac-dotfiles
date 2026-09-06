@@ -19,7 +19,7 @@
   # on every rebuild. We don't read the HM man pages.
   manual.manpages.enable = false;
 
-  # NOTE: nvim/, ghostty/, sketchybar/, fastfetch/, ccstatusline/ configs
+  # NOTE: nvim/, ghostty/, glance/, fastfetch/, ccstatusline/ configs
   # are NOT symlinked here because they already live in ~/.config/ (the dotfiles repo).
   # On a new machine, cloning the repo to ~/.config/ puts them in place automatically.
   # Claude/Codex configs live outside ~/.config, so ai-tools.nix links their

@@ -14,7 +14,7 @@
       yabai -m config window_placement second_child
 
       # padding
-      yabai -m config top_padding    10
+      yabai -m config top_padding    4
       yabai -m config bottom_padding 10
       yabai -m config left_padding   10
       yabai -m config right_padding  10
@@ -37,8 +37,8 @@
       yabai -m rule --add app="^System Settings$" manage=off
       yabai -m rule --add app="^Calculator$" manage=off
 
-      # external bar (sketchybar)
-      yabai -m config external_bar all:30:0
+      # external bar (Glance)
+      yabai -m config external_bar all:50:0
     '';
   };
 
@@ -53,7 +53,7 @@
   '';
 
   # Patch yabai SA PAC ABI v1 -> v0 (yabai 7.1.17 + Sequoia/Tahoe bug),
-  # then reload the SA into Dock and kickstart sketchybar so its env reflects
+  # then reload the SA into Dock and kickstart skhd so its env reflects
   # nix-config changes (nix-darwin doesn't auto-bump live launchd state for
   # user agents whose plist content changed).
   system.activationScripts.postActivation.text = ''
@@ -70,8 +70,6 @@
 
     PRIMARY_UID=$(id -u ayamdobhal 2>/dev/null)
     if [ -n "$PRIMARY_UID" ]; then
-      launchctl kickstart -k "gui/$PRIMARY_UID/org.nixos.sketchybar-custom" 2>/dev/null \
-        && echo "Kickstarted sketchybar"
       launchctl kickstart -k "gui/$PRIMARY_UID/org.nixos.skhd" 2>/dev/null \
         && echo "Kickstarted skhd"
     fi

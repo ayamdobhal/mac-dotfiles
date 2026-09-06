@@ -5,7 +5,7 @@
     ./homebrew.nix
     ./yabai.nix
     ./skhd.nix
-    ./sketchybar.nix
+    ./glance.nix
   ];
 
   nixpkgs.overlays = [ (import ../../overlays) ];
