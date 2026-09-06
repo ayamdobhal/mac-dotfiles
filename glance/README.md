@@ -5,7 +5,8 @@ and now playing, Claude/Codex usage, CPU/RAM, upload/download speeds, network,
 volume, battery, weather, and date/time on the right. Click now playing for media controls or weather for the forecast.
 Network speeds appear before the connection icon with `show-speed = true` under
 `[widgets.default.network]`, using the built-in three-second sampler.
-The center is left clear for the MacBook notch.
+Each connected display gets a bar, showing that display’s yabai spaces, including
+empty spaces and floating app windows. The center is left clear for the MacBook notch.
 The system monitor includes CPU and RAM; upstream does not
 currently offer a CPU-only setting. Spaces use the Nix-installed yabai binary.
 The date/time keeps the existing 24-hour clock with seconds and calendar popup.
