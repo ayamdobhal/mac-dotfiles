@@ -4,6 +4,7 @@ preset = "flat-dark"
 yabai.path = "/run/current-system/sw/bin/yabai"
 
 [appearance]
+popup-gap = 0
 accent-color = "system"
 roundness = 22
 fill-opacity = 0.7

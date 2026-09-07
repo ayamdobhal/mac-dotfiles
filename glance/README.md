@@ -58,6 +58,7 @@ The 50pt bar container centers 38pt widgets, leaving 6pt above and below them.
 Combined with yabai's 4pt padding, the gap below widget groups is 10pt. Widget
 groups have 70% dark fill and the bar background is transparent. Built-in accents
 follow the macOS accent via `[appearance] accent-color = "system"`; neon-color
-only controls borders and glow.
+only controls borders and glow. `popup-gap = 0` attaches popups directly to the
+bar; change it to a positive number for a gap in points. Both settings reload live.
 
 Old SketchyBar sources remain recoverable from Git history.
