@@ -7,6 +7,7 @@
     ./dev.nix
     ./ai-tools.nix
     ./obsidian.nix
+    ./spicetify.nix
   ];
 
   home.stateVersion = "25.05";
