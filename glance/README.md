@@ -1,7 +1,7 @@
 # Glance
 
-The bar uses built-in spaces and active app on the left,
-and now playing, Claude/Codex usage, CPU/RAM, upload/download speeds, network,
+The bar uses built-in spaces and now playing on the left,
+and Claude/Codex usage, CPU/RAM, upload/download speeds, network,
 volume, battery, weather, and date/time on the right. Click now playing for media controls or weather for the forecast.
 Network speeds appear before the connection icon with `show-speed = true` under
 `[widgets.default.network]`, using the built-in three-second sampler.
