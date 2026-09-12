@@ -26,9 +26,9 @@ displayed = false
 [widgets]
 displayed = [
     "default.spaces",
-    "default.activeapp",
-    "spacer",
+    "divider",
     "default.nowplaying",
+    "spacer",
     "native.ai-usage",
     "default.systemmonitor",
     "default.network",
