@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     bat
+    glow
     bottom
     fd
     jq
