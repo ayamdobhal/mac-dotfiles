@@ -1,12 +1,11 @@
 return {
-  "loctvl842/monokai-pro.nvim",
+  "Mofiqul/dracula.nvim",
   lazy = false,
   priority = 1000,
   config = function()
-    require("monokai-pro").setup({
-      transparent_background = true,
-      filter = "spectrum",
+    require("dracula").setup({
+      transparent_bg = true,
     })
-    vim.cmd("colorscheme monokai-pro")
+    vim.cmd("colorscheme dracula")
   end,
 }
