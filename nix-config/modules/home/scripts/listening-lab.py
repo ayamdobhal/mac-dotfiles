@@ -59,6 +59,8 @@ def main():
             if link.is_symlink(): link.unlink()
             link.symlink_to(target, target_is_directory=True)
             link.replace(current)
+            if subprocess.run(['launchctl', 'print', service], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+                run('launchctl', 'kickstart', '-k', service)
         print('Listening Lab ready. Reopen Spotify. Mac recording permission may be required.')
 
 if __name__ == '__main__':

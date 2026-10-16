@@ -27,11 +27,13 @@ in
 {
   config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     home.packages = [ lab ];
-    home.activation.setupListeningLab = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      if [ -z "''${DRY_RUN_CMD:-}" ]; then
-        ${lab}/bin/listening-lab setup || echo "Listening Lab setup failed; run listening-lab setup to retry." >&2
-      fi
-    '';
+    home.activation.setupListeningLab =
+      lib.hm.dag.entryBetween [ "setupLaunchAgents" ] [ "writeBoundary" ]
+        ''
+          if [ -z "''${DRY_RUN_CMD:-}" ]; then
+            ${lab}/bin/listening-lab setup || echo "Listening Lab setup failed; run listening-lab setup to retry." >&2
+          fi
+        '';
     launchd.agents.listening-lab = {
       enable = true;
       config = {
