@@ -1,54 +1,64 @@
-# Spotify with Aurora on macOS
+# Spotify + Listening Lab on macOS
 
-The dotfiles install Spotify and `spicetify-cli` through nix-darwin's Homebrew
-module. Home Manager builds [Aurora](https://github.com/ayamdobhal/aurora) from a
-pinned Git revision, deploys its theme and extensions, and applies Spicetify.
-The Linux profile does not select Spotify or this module.
+Both Mac hosts install the private Listening Lab player over plain Spotify.
+Aurora's periodic apply agent has been removed. Linux is unaffected.
 
-- [Installation and source pin](../modules/home/spicetify.nix)
-- [Deployment helper](../modules/home/scripts/apply-aurora.py)
-- [Regression checks](../tests/test_aurora.py)
+The [module](../modules/home/spicetify.nix) pins the private source commit.
+The [bootstrap](../modules/home/scripts/listening-lab.py) clones and builds it
+as the logged-in user under `~/Library/Application Support/ListeningLab`;
+private GitHub credentials never go into the Nix store. Updates use separate
+revision directories and switch `current` only after a successful build/apply.
 
 ## Setup
 
-Run the usual `sudo darwin-rebuild switch --flake ~/.config/nix-config#ayam-magbog-work`
-(or `#ayam-magbog-personal`). On a new machine, open Spotify once so it creates
-its preferences. The login agent retries every five minutes and applies Aurora
-when Spotify is ready. To run immediately:
+Ensure this Mac can clone `git@github.com:ayamdobhal/spotify-listening-lab.git`
+and has Xcode Command Line Tools (`xcode-select --install` if missing).
+Open Spotify and log in once, then run your normal rebuild:
 
 ```sh
-aurora-apply
+sudo darwin-rebuild switch --flake ~/.config/nix-config#ayam-magbog-work
 ```
 
-The helper applies after an Aurora source, Spotify version or Spicetify version
-change. It skips unchanged installations, serializes concurrent runs, and marks
-success only after Spicetify succeeds. Spotify is never automatically restarted;
-reopen it to load newly applied assets. `aurora-apply --force` reapplies manually.
-Failures are retried; diagnostics are in `~/Library/Logs/aurora-apply.log`.
-Spotify or Spicetify updates can still introduce compatibility changes that
-require a newer Aurora revision or CLI.
-
-## What is tracked
-
-Track the Nix source pin, helper and documentation. Do not track
-`~/.config/spicetify/`: its INI contains machine paths and generated backup
-versions; Themes, Extensions and CustomApps contain installed copies.
-
-The helper owns the Aurora selection, theme injection flags, Spotify/prefs paths,
-API exposure and exact extension list. Marketplace is not enabled by this setup.
-Other existing settings and Spicetify's `[Backup]` section remain local. Existing
-local files are retained when removing them from Git. Before first deployment,
-the previous INI, Aurora theme and extensions are saved under
-`~/Library/Caches/dotfiles-aurora/before-nix/`.
-
-## Update Aurora
-
-Change `rev`, `hash` and the short `version` in `modules/home/spicetify.nix`, then
-rebuild. Obtain the unpacked source hash for the desired full commit SHA with:
+Use `#ayam-magbog-personal` on the personal Mac. If Spotify was not initialized
+or private Git access was unavailable during activation, retry:
 
 ```sh
-nix store prefetch-file --unpack --json https://github.com/ayamdobhal/aurora/archive/COMMIT_SHA.tar.gz
+listening-lab setup
+listening-lab start
 ```
 
-Aurora's TypeScript is type-checked and bundled by Nix; downloaded installer
-scripts and bundled extension copies do not need to live in dotfiles.
+Quit/reopen Spotify to load the extension. Click the waveform button beside
+Lyrics; Back/Escape returns to normal Spotify. The app starts in normal view.
+Setup backs up the previous Spicetify config and disables other themes,
+extensions and custom apps without deleting their files.
+
+**Mac currently uses capture-only audio. It does not include Windows' buffered
+playback or equivalent visual timing.** The experimental Mac Core Audio relay
+is not enabled. Audio must be playing on this Mac, not a remote Connect device.
+
+## Recording permissions and diagnostics
+
+Grant macOS Screen & System Audio Recording permission when requested.
+Background helpers have their own permission context; a successful build does
+not prove capture is authorized on a new Mac. For an interactive permission
+prompt / troubleshooting:
+
+```sh
+listening-lab run
+```
+
+This stops the managed background helper and runs it in Terminal. Grant the
+requested permission in System Settings, restart the command, and leave the
+terminal open while testing. Ctrl-C stops it; `listening-lab start` returns to
+the background service (which still needs its own permission).
+
+`listening-lab status` shows the pin/service state. Logs:
+`~/Library/Logs/listening-lab.log`. `listening-lab stop` stops the helper.
+A stale manually installed helper on port 4738 must be stopped first; the
+installer does not kill arbitrary processes. The old pre-Nix test agent was
+`dev.iamdobhal.listening-lab`; the managed agent is
+`org.nix-community.home.listening-lab`.
+
+Setup applies with `--no-restart`; it does not interrupt Spotify automatically.
+There is no five-minute patching loop. After Spotify updates, rerun setup and
+restart Spotify. Keep Spicetify current through Homebrew.

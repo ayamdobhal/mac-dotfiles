@@ -5,52 +5,42 @@
   ...
 }:
 let
-  aurora = pkgs.stdenvNoCC.mkDerivation {
-    pname = "aurora-spicetify";
-    version = "b50d7f8";
-    src = pkgs.fetchFromGitHub {
-      owner = "ayamdobhal";
-      repo = "aurora";
-      rev = "b50d7f82c8d220cc924861268cd5d5e147206994";
-      hash = "sha256-F+eprccXQG+1ix8Uyt3FJxOqklDFLHOxpKupk+Tsw3U=";
-    };
-    nativeBuildInputs = [
-      pkgs.typescript
-      pkgs.esbuild
-    ];
-    buildPhase = ''
-      runHook preBuild
-      bash scripts/build.sh
-      runHook postBuild
-    '';
-    installPhase = ''
-      mkdir -p "$out"
-      cp -r theme extensions "$out/"
-    '';
-  };
-  applyAurora = pkgs.writeShellScriptBin "aurora-apply" ''
-    exec ${pkgs.python3}/bin/python3 ${./scripts/apply-aurora.py} \
-      --source ${aurora} "$@"
+  revision = "b7b464edb0d89ffdaba499aae291bf700b93a3b6";
+  runtime = "${config.home.homeDirectory}/Library/Application Support/ListeningLab/current";
+  lab = pkgs.writeShellScriptBin "listening-lab" ''
+    export PATH=${
+      lib.makeBinPath [
+        pkgs.git
+        pkgs.nodejs
+        pkgs.python3
+        pkgs.openssh
+      ]
+    }:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin
+    exec ${pkgs.python3}/bin/python3 ${./scripts/listening-lab.py} --revision ${revision} "$@"
+  '';
+  service = pkgs.writeShellScript "listening-lab-service" ''
+    if [ ! -f ${lib.escapeShellArg "${runtime}/helper/server.cjs"} ]; then exit 0; fi
+    cd ${lib.escapeShellArg runtime}
+    exec ${pkgs.nodejs}/bin/node helper/server.cjs
   '';
 in
 {
-  # Spotify and spicetify-cli are installed by nix-darwin's Homebrew module.
-  # Keep this module out of the Linux profile, which does not select Spotify.
   config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-    home.packages = [ applyAurora ];
-    home.activation.applyAurora = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.packages = [ lab ];
+    home.activation.setupListeningLab = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ -z "''${DRY_RUN_CMD:-}" ]; then
-        ${applyAurora}/bin/aurora-apply || echo "Aurora apply failed; run aurora-apply to retry." >&2
+        ${lab}/bin/listening-lab setup || echo "Listening Lab setup failed; run listening-lab setup to retry." >&2
       fi
     '';
-    launchd.agents.aurora-apply = {
+    launchd.agents.listening-lab = {
       enable = true;
       config = {
-        ProgramArguments = [ "${applyAurora}/bin/aurora-apply" ];
+        ProgramArguments = [ "${service}" ];
         RunAtLoad = true;
-        StartInterval = 300;
-        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/aurora-apply.log";
-        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/aurora-apply.log";
+        KeepAlive.SuccessfulExit = false;
+        ThrottleInterval = 30;
+        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/listening-lab.log";
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/listening-lab.log";
       };
     };
   };
