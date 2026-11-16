@@ -3,11 +3,10 @@
   imports = [
     ./modules/packages.nix
     ./modules/shell.nix
+    ./modules/rebuild.nix
     ./modules/git.nix
     ./modules/neovim.nix
     ./modules/dev.nix
-    ./modules/ai-tools.nix
-    ./modules/obsidian.nix
     ./modules/spicetify.nix
     ./modules/wallpaper.nix
 
@@ -41,8 +40,4 @@
   # configs are NOT symlinked here because they already live in ~/.config/ (the
   # dotfiles repo). On a new machine, cloning the repo to ~/.config/ puts them
   # in place automatically, and edits apply without a rebuild.
-  # Claude/Codex configs live outside ~/.config, so ai-tools.nix links their
-  # durable non-secret files from this repo into ~/.claude and ~/.codex.
-  # obsidian.nix bootstraps the private Obsidian vault checkout and adds an
-  # ignored ~/.config/obsidian-vault symlink for convenient access from dotfiles.
 }

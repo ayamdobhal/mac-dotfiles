@@ -5,6 +5,7 @@
   services.skhd.enable = true;
 
   # launchd starts agents with a bare system PATH; the bindings call yabai,
+  # scripts in ~/.local/bin and brew-installed tools.
   launchd.agents.skhd.config.EnvironmentVariables.PATH = builtins.concatStringsSep ":" [
     "${config.home.profileDirectory}/bin"
     "${config.home.homeDirectory}/.local/bin"

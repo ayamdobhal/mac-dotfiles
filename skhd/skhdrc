@@ -29,6 +29,8 @@ ctrl + shift - r : launchctl kickstart -k gui/$(id -u)/org.nix-community.home.ya
 ## cmd - backspace : skhd -k "lalt + backspace
 
 
+# terminal: your own launcher at ~/.local/bin/open-terminal if there is one, else Ghostty
+cmd + shift - return : "$HOME/.local/bin/open-terminal" 2>/dev/null || open -n /Applications/Ghostty.app
 # cmd + space - return : flameshot gui
 
 # # fast focus desktop

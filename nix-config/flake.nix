@@ -29,24 +29,33 @@
 
       # Every Mac gets the same ./home.nix. A host contributes a package list
       # and nothing else (hosts/*.nix are `pkgs: [ ... ]`), so the machines
-      # cannot drift apart in any other way.
+      # cannot drift apart in any other way. `modules` is for a flake that
+      # builds on this one (see lib.mkHome below).
       mkHome =
-        hostPackages:
+        {
+          host,
+          modules ? [ ],
+        }:
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit sanrio-colorscripts; };
           modules = [
             ./home.nix
-            { home.packages = hostPackages pkgs; }
-          ];
+            { home.packages = import (./hosts + "/${host}.nix") pkgs; }
+          ]
+          ++ modules;
         };
     in
     {
       # `home-manager switch --flake .` picks "$USER@$(hostname -s)".
       homeConfigurations = {
-        "ayamdobhal@ayam-magbog-work" = mkHome (import ./hosts/work.nix);
-        "ayamdobhal@ayam-magbog-personal" = mkHome (import ./hosts/personal.nix);
+        "ayamdobhal@ayam-magbog-work" = mkHome { host = "work"; };
+        "ayamdobhal@ayam-magbog-personal" = mkHome { host = "personal"; };
       };
+
+      # For layering more modules on top from another flake, e.g. a private
+      # one: `inputs.dotfiles.lib.mkHome { host = "work"; modules = [ ./extra.nix ]; }`.
+      lib.mkHome = mkHome;
 
       checks.${system}.aurora =
         pkgs.runCommand "aurora-tests"

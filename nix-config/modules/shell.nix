@@ -26,7 +26,6 @@
       laude = "claude --dangerously-skip-permissions";
       codex = "codex --dangerously-bypass-approvals-and-sandbox";
 
-
       # git aliases (oh-my-zsh git plugin)
       g = "git";
       ga = "git add";
@@ -201,14 +200,6 @@
       # claude-code native install
       path=("$HOME/.local/bin" $path)
 
-      # Rebuild helper. `nrs` -> auto-detect host, `nrs <hostname>` -> explicit
-      # (ayam-magbog-work / ayam-magbog-personal). No sudo: home-manager only
-      # touches the home directory.
-      nrs() {
-        local host="''${1:-$(scutil --get LocalHostName 2>/dev/null)}"
-        home-manager switch --flake "$HOME/.config/nix-config#$USER@$host" -b backup
-      }
-
       # oh-my-zsh git helper functions (used by dynamic aliases below)
       function git_current_branch() {
         local ref
@@ -274,7 +265,8 @@
       # Discord IPC
       ln -sf "$TMPDIR/discord-ipc-0" /tmp/discord-ipc-0 2>/dev/null
 
-      # Toggle the always-on caffeinate agent (AC-only sleep prevention,
+      # Toggle the always-on caffeinate agent (AC-only sleep prevention;
+      # no pmset/lock settings change). `off` lasts until
       # the next rebuild or login.
       caff() {
         local uid label plist
@@ -300,15 +292,6 @@
             fi
             ;;
         esac
-      }
-
-      # Work navigation helper
-      z() {
-        if [ -z "$1" ]; then
-          cd "$base"
-        else
-          cd "$base/$1"
-        fi
       }
     '';
   };

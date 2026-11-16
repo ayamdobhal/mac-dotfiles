@@ -29,12 +29,11 @@
     beamPackages.elixir
     vtsls
 
+    # xAI's coding agent (`grok`); unfree
+    grok-build
+
     # fonts
     nerd-fonts.hack
-
-    # its build (`just ghosttykit && just zmx && just app-install`).
-    zmx
-    just
   ];
 
   # glow reads its config from ~/Library/Preferences on macOS.

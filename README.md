@@ -21,6 +21,7 @@ nix-config/
 
 - **home-manager** manages CLI tools, shell, git, dotfile symlinks, launch agents, macOS preferences and brew casks
 - **Both Macs share one config.** A host file is only a package list, so nothing else can differ between them
+- **Layering:** another flake can add modules on top with `lib.mkHome { host = "work"; modules = [ ... ]; }` (see `flake.nix`); `dotfiles.rebuild` points `nrs` at that flake. `~/.config/private/` is ignored for this purpose
 - **Existing configs** (nvim, glance, ghostty, yabai, skhd, etc.) stay as native files — not rewritten in Nix, and edits apply without a rebuild
 
 ## What's inside
