@@ -43,7 +43,6 @@ macos-option-as-alt = left
 background = #11111b
 foreground = #f8f8f2
 background-opacity = 0.7
-background-blur = true
 
 # Normal
 palette = 0=#1e1e2e
