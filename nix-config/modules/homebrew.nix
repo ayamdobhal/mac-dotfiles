@@ -4,9 +4,7 @@ let
     "shaunsingh/sfmono-nerd-font-ligaturized"
   ];
 
-  brews = [
-    "spicetify-cli"
-  ];
+  brews = [ ];
 
   casks = [
     # browsers

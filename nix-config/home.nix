@@ -7,7 +7,6 @@
     ./modules/git.nix
     ./modules/neovim.nix
     ./modules/dev.nix
-    ./modules/spicetify.nix
     ./modules/wallpaper.nix
 
     # macOS desktop

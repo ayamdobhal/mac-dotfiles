@@ -57,16 +57,6 @@
       # one: `inputs.dotfiles.lib.mkHome { host = "work"; modules = [ ./extra.nix ]; }`.
       lib.mkHome = mkHome;
 
-      checks.${system}.aurora =
-        pkgs.runCommand "aurora-tests"
-          {
-            nativeBuildInputs = [ pkgs.python3 ];
-          }
-          ''
-            python3 -B -m unittest discover -s ${./.}/tests -v
-            touch $out
-          '';
-
       formatter.${system} = pkgs.nixfmt;
     };
 }

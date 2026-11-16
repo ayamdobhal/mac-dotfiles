@@ -36,7 +36,6 @@ nix-config/
 | **skhd** | Hotkey daemon keybindings (pairs with yabai) |
 | **fastfetch** | System info fetch with custom logo |
 | **ccstatusline** | Claude Code status line settings |
-| **[Aurora setup](nix-config/docs/spicetify.md)** | Nix-built Aurora theme and automatic Spicetify application |
 
 ## Glance status bar
 
@@ -70,18 +69,6 @@ removed; its old setup is available in Git history.
 | macOS services | home-manager launch agents (yabai, skhd, glance, caffeinate) |
 | macOS preferences | home-manager `targets.darwin.defaults` (dock, finder, keyboard, trackpad) |
 | Fonts | nix + brew casks |
-| Spotify theming | Pinned [Aurora](https://github.com/ayamdobhal/aurora) build + Home Manager deployment; Spicetify CLI via Homebrew |
-
-## Spotify and Aurora
-
-The [Aurora setup](nix-config/docs/spicetify.md) installs Spotify and Spicetify,
-builds the theme and extensions from a pinned [Aurora](https://github.com/ayamdobhal/aurora)
-commit, and applies them automatically. Open Spotify once on a new machine;
-`aurora-apply` can trigger deployment immediately. A login agent also checks for
-version changes every five minutes without restarting Spotify.
-
-Spicetify's INI, backup metadata, Marketplace files and installed theme/extension
-copies stay local and are ignored by Git.
 
 ## Setup on a new Mac
 
