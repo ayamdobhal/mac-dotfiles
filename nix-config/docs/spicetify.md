@@ -1,18 +1,17 @@
 # Spotify with Aurora on macOS
 
-The dotfiles install Spotify and `spicetify-cli` through nix-darwin's Homebrew
-module. Home Manager builds [Aurora](https://github.com/ayamdobhal/aurora) from a
-pinned Git revision, deploys its theme and extensions, and applies Spicetify.
-The Linux profile does not select Spotify or this module.
+The dotfiles install Spotify and `spicetify-cli` through Homebrew
+([homebrew.nix](../modules/homebrew.nix)). Home Manager builds
+[Aurora](https://github.com/ayamdobhal/aurora) from a pinned Git revision,
+deploys its theme and extensions, and applies Spicetify.
 
-- [Installation and source pin](../modules/home/spicetify.nix)
-- [Deployment helper](../modules/home/scripts/apply-aurora.py)
+- [Installation and source pin](../modules/spicetify.nix)
+- [Deployment helper](../modules/scripts/apply-aurora.py)
 - [Regression checks](../tests/test_aurora.py)
 
 ## Setup
 
-Run the usual `sudo darwin-rebuild switch --flake ~/.config/nix-config#ayam-magbog-work`
-(or `#ayam-magbog-personal`). On a new machine, open Spotify once so it creates
+Run the usual `nrs` (`home-manager switch`). On a new machine, open Spotify once so it creates
 its preferences. The login agent retries every five minutes and applies Aurora
 when Spotify is ready. To run immediately:
 
@@ -43,7 +42,7 @@ the previous INI, Aurora theme and extensions are saved under
 
 ## Update Aurora
 
-Change `rev`, `hash` and the short `version` in `modules/home/spicetify.nix`, then
+Change `rev`, `hash` and the short `version` in `modules/spicetify.nix`, then
 rebuild. Obtain the unpacked source hash for the desired full commit SHA with:
 
 ```sh

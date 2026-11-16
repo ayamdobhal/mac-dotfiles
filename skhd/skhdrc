@@ -19,7 +19,7 @@ alt + shift - 0 : yabai -m window --space 10;
 # # stop/start/restart yabai
 # ctrl + alt - q : yabai --stop-service
 # ctrl + alt - s : yabai --start-service
-ctrl + shift - r : launchctl kickstart -k gui/$(id -u)/org.nixos.yabai
+ctrl + shift - r : launchctl kickstart -k gui/$(id -u)/org.nix-community.home.yabai
 # alt + shift - q : skhd -k "cmd - q "
 
 
@@ -29,7 +29,6 @@ ctrl + shift - r : launchctl kickstart -k gui/$(id -u)/org.nixos.yabai
 ## cmd - backspace : skhd -k "lalt + backspace
 
 
-cmd + shift - return : open -n /Applications/Ghostty.app
 # cmd + space - return : flameshot gui
 
 # # fast focus desktop

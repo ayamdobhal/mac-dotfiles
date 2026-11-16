@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-spec = importlib.util.spec_from_file_location("aurora", Path(__file__).parents[1] / "modules/home/scripts/apply-aurora.py")
+spec = importlib.util.spec_from_file_location("aurora", Path(__file__).parents[1] / "modules/scripts/apply-aurora.py")
 aurora = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(aurora)
 

@@ -3,12 +3,17 @@
 The bar uses built-in spaces and now playing on the left,
 and Claude/Codex usage, CPU/RAM, upload/download speeds, network,
 volume, battery, weather, and date/time on the right. Click now playing for media controls or weather for the forecast.
+The native fan-control widget beside CPU/RAM shows fan 1 and 2 percentages. Click it for
+per-fan sliders, maximum speed, and automatic control. Speed changes use the
+macOS administrator prompt and expire after 15 minutes; see
+[glance-fan-control](https://github.com/ayamdobhal/glance-fan-control)
+(cloned at `~/personal/glance-fan-control`) for build instructions and validation.
 Network speeds appear before the connection icon with `show-speed = true` under
 `[widgets.default.network]`, using the built-in three-second sampler.
 Each connected display gets a bar, showing that display’s yabai spaces, including
 empty spaces and floating app windows. The center is left clear for the MacBook notch.
 The system monitor includes CPU and RAM; upstream does not
-currently offer a CPU-only setting. Spaces use the Nix-installed yabai binary.
+currently offer a CPU-only setting. Spaces use the Nix-installed yabai binary (`yabai.path` in config.toml, `~/.nix-profile/bin/yabai`).
 The date/time keeps the existing 24-hour clock with seconds and calendar popup.
 
 Weather uses Open-Meteo with Glance's location detection and IP fallback. It does
@@ -31,7 +36,7 @@ exist. Changes reload automatically. A config in the home directory takes preced
 
 ## Installation and startup
 
-Nix manages the Glance launch agent (`org.nixos.glance`) and yabai's 50pt bar
+Nix manages the Glance launch agent (`org.nix-community.home.glance`) and yabai's 50pt bar
 reservation with 4pt top padding. Glance launches at login and restarts after a
 crash; its explicit Quit menu still works. SketchyBar's service, package, font,
 configuration and keybinding triggers have been removed.
@@ -47,10 +52,10 @@ do not merge into an old app bundle. Rebuild the usage bundle using
 Activate on this Mac with:
 
 ```sh
-sudo darwin-rebuild switch --flake ~/.config/nix-config#ayam-magbog-work
+nrs
 ```
 
-On the personal Mac use `#ayam-magbog-personal`. Grant Glance Accessibility access
+`nrs` runs `home-manager switch` for the current Mac. Grant Glance Accessibility access
 in System Settings if macOS requests it after replacing an ad-hoc build.
 Automatic upstream update checks are disabled for this local fork.
 

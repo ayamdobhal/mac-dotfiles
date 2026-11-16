@@ -1,21 +1,20 @@
 # Configuration maintenance
 
-Keep machine services, boot, users and hardware in hosts/ and modules/nixos/.
-Keep user packages, dotfiles and NERV configuration in modules/home/linux/.
-Preserve the two Mac outputs and their input revisions when editing Linux.
-Do not change system.stateVersion or home.stateVersion during routine work.
+This flake is Mac-only and uses standalone Home Manager; there is no nix-darwin
+or NixOS configuration. Nothing here may require root at switch time. The one
+root-owned piece, the yabai scripting addition, is handled by the
+`yabai-sa-setup` command defined in modules/yabai.nix.
 
-Start graphical-session applications through app2unit in the Niri config.
-Keep app2unit installed and preserve the Quickshell graphical-session unit.
+Both Macs share home.nix and everything under modules/. hosts/*.nix are plain
+package lists (`pkgs: [ ... ]`); do not add any other per-host difference.
+Do not change home.stateVersion during routine work.
 
 Run checks from the repository root, using the Git flake so only tracked files enter the source
 (the checkout can contain private application state under ~/.config):
 
     nix flake check ./nix-config --no-write-lock-file
-    nix build ./nix-config#nixosConfigurations.thonkpad.config.system.build.toplevel --no-link
+    nix build './nix-config#homeConfigurations."ayamdobhal@ayam-magbog-work".activationPackage' --no-link
 
-Validate on Linux before activation. Record the current system generation and
-retain the existing source as a rollback baseline. Test before switching.
-Use Conventional Commits at major checkpoints. Do not bypass .githooks/pre-commit;
-install it with git config core.hooksPath .githooks. Review lock changes rather
-than performing a blanket input update.
+Build before switching. Use Conventional Commits at major checkpoints. Do not
+bypass .githooks/pre-commit; install it with git config core.hooksPath .githooks.
+Review lock changes rather than performing a blanket input update.
